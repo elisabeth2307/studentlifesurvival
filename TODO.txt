@@ -1,0 +1,2 @@
+request dauert lange, funktioniert nur einmal von zehn versuchen :-(
+Was ist das problem?
