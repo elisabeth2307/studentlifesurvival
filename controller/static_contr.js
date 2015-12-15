@@ -39,7 +39,7 @@ StaticController.prototype.handle=function () {
 				res.writeHead(200, {'content-type':'text/'+format});
 
 				if(id == "cooking"){
-					recipeManager.getAll( this.songView ,this.res,this.parsedurlinfo) // evtl auslagern 
+					recipeManager.getAll(utf8data) // evtl auslagern 
 				}
 
 				res.end(utf8data);

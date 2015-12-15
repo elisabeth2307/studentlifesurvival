@@ -9,17 +9,17 @@ var RecipeView = function(parsedurlinfo, res ){
 }
 
 RecipeView.prototype.formatHtml = function(data,htmlTemplate){
-	var result = htmlTemplate
+	var result = htmlTemplate.toString()
 	var recList = "<ul>"
 	var recipies = ""
 
 	for (var recipe in data){
-		var cur_rec = data[recipe]
-		recList += "<li>" + cur_rec.title + "</li>"
+		//var cur_rec = data[recipe]
+		recList += "<li>" + recipe.title + "</li>"
 
-		recipies = "<h3>" + cur_rec.title + "</h3>"
-		recipies = "<p>" + cur_rec.description + "</p>"
-		recipies = "<img src = \"" + cur_rec.src + "\" >"
+		recipies = "<h3>" + recipe.title + "</h3>"
+		recipies = "<p>" + recipe.description + "</p>"
+		recipies = "<img src = \"" + recipe.src + "\" >"
 	}
 	recList += "</ul>"
 	result = result.replace(/{LINKS}/g, recList)
