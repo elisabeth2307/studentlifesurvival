@@ -12,8 +12,6 @@ ImageController.prototype.handle = function(){
 	console.log("INFO: serving image '"+ filename)
 
 	format = this.parsedurlinfo.format
-	console.log("FORMAT IMAGE CONTROLLER "+format)
-
 	res = this.res
 
 	fs.readFile(filename, function(err, data){
@@ -23,9 +21,9 @@ ImageController.prototype.handle = function(){
 			res.end("We're sorry, an ERROR occured in image controller :-(");
 		}else{ 
 			//var img = fs.readFileSync(filename);
-			res.writeHead(200, {'content-type':'image/png'});
+			res.writeHead(200, {'content-type':'image/'+format});
 			res.end(data, 'binary')
-
+			console.log("---------------------------------------------------------------")
 		}
 	})
 

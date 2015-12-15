@@ -1,5 +1,7 @@
 body {				
 		background-color: #81BEF7;
+		margin: 0;
+		padding: 0;
 		}
 
 #wrapper {	
@@ -51,17 +53,20 @@ footer {
 		clear:both;
 		width: 100%;
 		max-width: 920px;
-		height: 30px;
+		height: 20px;
 		color: #FFFFFF;
 		position:fixed;
 		bottom: 0;
+		margin: 0;
+		padding: 0;
 		}
 
 #footer-content {
 		text-align:center;
-	    font-size: 12px;
+	    	font-size: 12px;
 		font-family: Verdana, Geneva, Arial, sans-serif;
-		padding-top: 1.25%;
+		margin: 0;
+		padding: 0;
 		}
 
 section {	

@@ -13,15 +13,18 @@
 
 		<div id="wrapper">
 
-            <nav id="nav">
-
+	<nav id="nav">
                 <form action="/public/content/cooking.html"><button class="btnNav">Cooking</button></form>
                 <form action="/public/content/cleaning.html"><button class="btnNav">Cleaning</button></form>
                 <form action="/public/content/washing.html"><button class="btnNav">Washing</button></form>
-			</nav>
+	</nav>
 
 			<section>
-				<h2>Washing!</h2>
+				<h2>Cooking!</h2>
+				{LINKS}
+
+				{CONTENT}
+
 			</section>
 			
 			<footer>

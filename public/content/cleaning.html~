@@ -17,11 +17,11 @@
 
                 <form action="/public/content/cooking.html"><button class="btnNav">Cooking</button></form>
                 <form action="/public/content/cleaning.html"><button class="btnNav">Cleaning</button></form>
-                <form action="/public/content/washing.html"><button class="btnNav">Washing</button></form>
+                <form action="/public/content/washingl.html"><button class="btnNav">Washing</button></form>
 			</nav>
 
 			<section>
-				<h2>Washing!</h2>
+				<h2>Cleaning!</h2>
 			</section>
 			
 			<footer>

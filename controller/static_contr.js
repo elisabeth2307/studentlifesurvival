@@ -1,8 +1,15 @@
 var fs = require('fs');
+var RecipeView = require("../view/recipe_view.js")
+var RecipeManager = require("../model/recipe_mgmt.js")
+var Recipe = require("../model/recipe_model.js")
 
 var StaticController=function(parsedurlinfo, res){
 	this.parsedurlinfo=parsedurlinfo
 	this.res = res
+	this.recManager = new RecipeManager
+	this.recipeView = new RecipeView(parsedurlinfo, res)
+	this.recipeManager = new RecipeManager(this.recipeView, parsedurlinfo, res)
+
 }
 
 StaticController.prototype.handle=function () {
@@ -13,11 +20,10 @@ StaticController.prototype.handle=function () {
 			this.parsedurlinfo.resource,
 			[this.parsedurlinfo.id,this.parsedurlinfo.format].join(".")
 			].join("/")*/
-	res=this.res	// needed?
+	var res=this.res
 	console.log("INFO: serving static file '"+ filename)
-	console.log("---------------------------------------------------------------")
-
 	format = this.parsedurlinfo.format
+	id = this.parsedurlinfo.id
 
 	fs.readFile(filename, function(err, data){
 			if (err){ // throw	err;
@@ -30,7 +36,13 @@ StaticController.prototype.handle=function () {
 
 				//TODO send proper mimetype for png/gif/css/js"
 				res.writeHead(200, {'content-type':'text/'+format});
+
+				if(id == "cooking"){
+					this.songManager.getAll( this.songView ,this.res,this.parsedurlinfo) // evtl auslagern 
+				}
+
 				res.end(utf8data);
+				console.log("---------------------------------------------------------------")
 
 			}
 		
