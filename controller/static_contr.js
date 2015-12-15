@@ -24,6 +24,7 @@ StaticController.prototype.handle=function () {
 	console.log("INFO: serving static file '"+ filename)
 	format = this.parsedurlinfo.format
 	id = this.parsedurlinfo.id
+	recipeManager = this.recipeManager
 
 	fs.readFile(filename, function(err, data){
 			if (err){ // throw	err;
@@ -38,7 +39,7 @@ StaticController.prototype.handle=function () {
 				res.writeHead(200, {'content-type':'text/'+format});
 
 				if(id == "cooking"){
-					this.songManager.getAll( this.songView ,this.res,this.parsedurlinfo) // evtl auslagern 
+					recipeManager.getAll( this.songView ,this.res,this.parsedurlinfo) // evtl auslagern 
 				}
 
 				res.end(utf8data);

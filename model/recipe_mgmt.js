@@ -10,22 +10,21 @@ var RecipeManager = function(view, parsedurlinfo, res){
 
 RecipeManager.prototype.getAll = function(){
  //database access
- 	size = db.size()
+ 	size = db.dbsize()
  	listRecipe = []
-
+	var recipe 
 
  	for(var i = 1; i <= size; i++){
  		db.get(i, function(err, data){
  			if (data){
- 				var recipe = JSON.parse(data)
+ 				recipe = JSON.parse(data)
  			}
  		})
 
- 		listRecipe.append(recipe)
+ 		listRecipe.push(recipe)
 
  	}
 
-db.end()
 
 
 }
