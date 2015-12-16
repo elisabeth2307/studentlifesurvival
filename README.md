@@ -1,11 +1,13 @@
-# studentlifesurvival
-dynamic web project, ITM14, WS2015
-authors: Tabea Halmschlager, Elisabeth Haberl
+# Studentlifesurvival
+Dynamic Web Project, ITM14, WS2015, FH Joanneum
+Authors: Tabea Halmschlager, Elisabeth Haberl
 
-Unsere Website hilft Studierenden, die zum ersten Mal alleine wohnen,
-im Alltag zurechtzukommen. Häufig auftretende Fragen wie zum Beispiel 
-"Wie kocht man Nudeln?" oder "Wie wasche ich meine Wäsche richtig?" 
-werden durch unser Service beantwortet. 
-Die User können auch Inhalte hinzufügen, ändern oder löschen.
+# Install
+- clone repository
+- npm install
+- npm start
 
---- Um redis zum Projekt hinzuzufügen: npm install
+# What's the project about?
+Our service helps students, who live alone on their own for the first
+time with basic knowledge about cooking, washing or cleaning.
+User also can add, update or delete data.
