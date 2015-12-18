@@ -3,6 +3,7 @@ UrlParser = function(request){
 	this.req=request
 	this.url=request.url;
 	this.controller="static";
+	this.content="static"
 	//console.log("TODO:  set the path to ... e.g.: \"public/pictures/image\"")
 	this.path="";
 	this.resource="";
@@ -76,7 +77,7 @@ UrlParser.prototype.parse=function(){
 	}
 
 	if(!(this.format=="html") && !(this.format == "css")){
-		this.controller = "image"
+		this.content = "image"
 	}
 
 	this.path = this.resource + "/" + this.id + "." + this.format

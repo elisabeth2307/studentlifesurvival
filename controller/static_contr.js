@@ -1,3 +1,4 @@
+"use strict"
 var fs = require('fs');
 var RecipeView = require("../view/recipe_view.js")
 var RecipeManager = require("../model/recipe_mgmt.js")
@@ -15,16 +16,18 @@ var StaticController=function(parsedurlinfo, res){
 StaticController.prototype.handle=function () {
 	console.log("\n--- Handling Static Content");
 
-	filename = this.parsedurlinfo.path
+	var filename = this.parsedurlinfo.path
 	/*[".", // <= maybe we should add a dynamic path here
 			this.parsedurlinfo.resource,
 			[this.parsedurlinfo.id,this.parsedurlinfo.format].join(".")
 			].join("/")*/
-	var res=this.res
+	
 	console.log("INFO: serving static file '"+ filename)
-	format = this.parsedurlinfo.format
-	id = this.parsedurlinfo.id
-	recipeManager = this.recipeManager
+	var res=this.res
+	var format = this.parsedurlinfo.format
+	var id = this.parsedurlinfo.id
+	var recipeManager = this.recipeManager
+	var content = this.parsedurlinfo.content
 
 	fs.readFile(filename, function(err, data){
 			if (err){ // throw	err;
@@ -33,16 +36,20 @@ StaticController.prototype.handle=function () {
 				res.writeHead(200, {'content-type':'text/plain'});
 				res.end("Helpful ERROR static controller :-)");
 			}else{ 
-				utf8data=data.toString('UTF-8')
+				var utf8data=data.toString('UTF-8')
 
-				//TODO send proper mimetype for png/gif/css/js"
-				res.writeHead(200, {'content-type':'text/'+format});
+				// handling images
+				if(content == "image"){
+					res.writeHead(200, {'content-type':'image/'+format});
+					res.end(data, 'binary')
+				} else { // css, html, js
+					res.writeHead(200, {'content-type':'text/'+format});
 
-				if(id == "cooking"){
-					recipeManager.getAll(utf8data) // evtl auslagern 
+					if(id == "cooking"){
+						recipeManager.getAll(utf8data) // evtl auslagern 
+					}
+					res.end(utf8data);
 				}
-
-				res.end(utf8data);
 				console.log("---------------------------------------------------------------")
 
 			}

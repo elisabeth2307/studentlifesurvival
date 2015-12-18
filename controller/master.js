@@ -2,7 +2,6 @@ startup = function(){
 	var http = require('http');
 	var config = require('../config.js')
 	var urlp = require('../helper/urlparser.js')
-	var imgcontr = require('./image_contr.js')
 	var staticcontr = require('./static_contr.js');
 
 	var serv = http.createServer(function(req, res) {
@@ -16,8 +15,6 @@ startup = function(){
 		
 		if(urlparser.controller == "static") {
 			handlerController = new staticcontr.StaticController(urlparser, res)		
-		} else if (urlparser.controller == "image") {
-			handlerController = new imgcontr.ImageController(urlparser, res)
 		} else {
 			handlerController = new staticcontr.StaticController(urlparser, res)		
 		}
