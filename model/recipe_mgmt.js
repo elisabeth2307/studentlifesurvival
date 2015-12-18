@@ -1,6 +1,8 @@
+"use strict"
 var fs = require('fs')
 var redis = require("redis")
-var db = redis.createClient(6379,"127.0.0.1")
+var config = require('../data/db_size.js')
+var db = redis.createClient(config.redisPort,config.server)
 
 var RecipeManager = function(view, res, parsedurlinfo){
 	this.recView = view
@@ -8,34 +10,27 @@ var RecipeManager = function(view, res, parsedurlinfo){
 	this.res = res
 }
 
-RecipeManager.prototype.getAll = function(data){
- //database access
- 	size = db.dbsize()
- 	listRecipe = []
- 	recView = this.recView
+RecipeManager.prototype.getAll = function(htmlData){
+	//database access
+ 	var size = config.size
+ 	var listRecipe = []
+ 	var recView = this.recView
 	var recipe 
 
-	console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ")
-
+	// get all entries from database
  	for(var i = 1; i <= size; i++){
  		db.get(i, function(err, data){
  			if (data){
- 				recipe = JSON.parse(data)
- 				console.log(recipe)
+ 				listRecipe.push(data)
 
+ 				if(listRecipe.length == size) {
+ 					recView.formatHtml(listRecipe, htmlData)
+ 				}
  			}
  		})
-
- 		listRecipe.push(recipe)
+ 		
 
  	}
- 	console.log("size list "+listRecipe.length)
-	console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ")
-
- 	recView.formatHtml(listRecipe, data)
-
 }
-
-
 
 module.exports = RecipeManager

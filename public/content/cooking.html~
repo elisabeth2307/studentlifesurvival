@@ -21,8 +21,8 @@
 
 			<section>
 				<h2>Cooking!</h2>
-				{LINKS}
 
+				{LINKS}
 				{CONTENT}
 
 			</section>

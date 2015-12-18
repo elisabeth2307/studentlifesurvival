@@ -3,8 +3,7 @@ UrlParser = function(request){
 	this.req=request
 	this.url=request.url;
 	this.controller="static";
-	this.content="static"
-	//console.log("TODO:  set the path to ... e.g.: \"public/pictures/image\"")
+	this.content="text"
 	this.path="";
 	this.resource="";
 	this.id=null;
@@ -88,6 +87,7 @@ UrlParser.prototype.parse=function(){
 	console.log("INFO id        = '"+this.id+"'")
 	console.log("INFO format    = '"+this.format+"'")
 	console.log("INFO params    = '"+this.params+"'")
+	console.log("INFO content    = '"+this.content+"'")
 
 }
 

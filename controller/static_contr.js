@@ -16,18 +16,14 @@ var StaticController=function(parsedurlinfo, res){
 StaticController.prototype.handle=function () {
 	console.log("\n--- Handling Static Content");
 
-	var filename = this.parsedurlinfo.path
-	/*[".", // <= maybe we should add a dynamic path here
-			this.parsedurlinfo.resource,
-			[this.parsedurlinfo.id,this.parsedurlinfo.format].join(".")
-			].join("/")*/
-	
-	console.log("INFO: serving static file '"+ filename)
 	var res=this.res
 	var format = this.parsedurlinfo.format
 	var id = this.parsedurlinfo.id
 	var recipeManager = this.recipeManager
 	var content = this.parsedurlinfo.content
+	var filename = this.parsedurlinfo.path
+	
+	console.log("INFO: serving static file '"+ filename)
 
 	fs.readFile(filename, function(err, data){
 			if (err){ // throw	err;
@@ -36,24 +32,21 @@ StaticController.prototype.handle=function () {
 				res.writeHead(200, {'content-type':'text/plain'});
 				res.end("Helpful ERROR static controller :-)");
 			}else{ 
-				var utf8data=data.toString('UTF-8')
+				res.writeHead(200, {'content-type':''+content+'/'+format});
+				var utf8data = data.toString('UTF-8')
 
 				// handling images
 				if(content == "image"){
-					res.writeHead(200, {'content-type':'image/'+format});
 					res.end(data, 'binary')
-				} else { // css, html, js
-					res.writeHead(200, {'content-type':'text/'+format});
-
+				} else { // handling non binary content
 					if(id == "cooking"){
 						recipeManager.getAll(utf8data) // evtl auslagern 
+					} else {
+						res.end(utf8data);
 					}
-					res.end(utf8data);
 				}
 				console.log("---------------------------------------------------------------")
-
 			}
-		
 	})
 }
 

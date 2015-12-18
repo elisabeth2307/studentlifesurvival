@@ -1,10 +1,12 @@
 {
  "1" : {	"id":"1",
  			"title":"Cooking noodles",
+			"description":"Don't set the kitchen on fire",
   			"imgsrc":"/public/images/noodles.jpg"
 		},
  "2" : {	"id":"2",
  			"title":"Cooking rice",
+			"description":"Don't set the kitchen on fire",
   			"imgsrc":"/public/images/rice.jpg"
 		}
 }

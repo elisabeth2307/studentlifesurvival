@@ -21,7 +21,7 @@ startup = function(){
 
 		handlerController.handle();	
 	});
-	serv.listen(config.port);
+	serv.listen(config.serverPort);
 }
 
 module.exports.startup = startup
