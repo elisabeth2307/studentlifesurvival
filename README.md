@@ -6,6 +6,7 @@ Authors: Tabea Halmschlager, Elisabeth Haberl
 - clone repository
 - npm install
 - npm start
+* redis database will be filled at first time (if database is empty)
 
 # What's the project about?
 Our service helps students, who live alone on their own for the first
