@@ -25,9 +25,8 @@ filling = function(){
 
 						console.log("DEBUG read recipes data from file: " + filename)
 						console.log("DEBUG amount of entries " + count)
-
 						// insert into database
-						for(var i = 0; i < count; i++){
+						for(var i = 1; i <= count; i++){
 							db.set(i, JSON.stringify(recipes[i]))
 						}
 					}

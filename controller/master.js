@@ -8,7 +8,7 @@ startup = function(){
 		// TODO addCookie(req,res)
 		urlparser = new urlp.UrlParser(req);
 		console.log("Parser Controller: "+urlparser.controller);
-
+		console.log("INFO: requested method: "+req.method)
 		console.log("INFO: requested url: '"+req.url+"':")
 		// TODO handler!
 		// TODO: add more controllers, e.g. to manage users: add/delete/login/...
