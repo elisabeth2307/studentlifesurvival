@@ -14,6 +14,8 @@ RecipeView.prototype.formatHtml = function(data,htmlTemplate){
 	var recList = "<ul>"
 	var recipies = ""
 
+	// todo: what to do when it is empty?
+
 	for (var i = 0; i < data.length; i++){
 		var recipe = JSON.parse(data[i])
 		recList += "<li>" + recipe.title + "</li>"
@@ -27,12 +29,8 @@ RecipeView.prototype.formatHtml = function(data,htmlTemplate){
 	result = result.replace(/{LINKS}/g, recList)
 	result = result.replace(/{CONTENT}/g, recipies)
 
-
 	this.res.writeHead(200, {'Content-Type': 'text/html'} );
 	this.res.end(result);
-
-
 }
-
 
 module.exports = RecipeView

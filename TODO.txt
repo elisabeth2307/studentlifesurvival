@@ -1,2 +1,3 @@
-request dauert lange, funktioniert nur einmal von zehn versuchen :-(
-Was ist das problem?
+recipe_view.js: what to do when no data available?
+static_contr.js: outsource functionality in cooking-section?
+recipe_mgmt.js: insert: id shall not be 0 and doesn't wort properly at all

@@ -25,6 +25,9 @@ StaticController.prototype.handle=function () {
 	
 	console.log("INFO: serving static file '"+ filename)
 
+	//recipeManager.insert("mytitle", "mydes", "mysrc", "4")
+
+
 	fs.readFile(filename, function(err, data){
 			if (err){ // throw	err;
 				console.log(err)		

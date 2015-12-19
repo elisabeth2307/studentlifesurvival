@@ -1,4 +1,8 @@
 {
+ "0" : {	"id":"0",
+ 			"title":"amount of database entries",
+			"size":"2"
+		},
  "1" : {	"id":"1",
  			"title":"Cooking noodles",
 			"description":"Don't set the kitchen on fire",

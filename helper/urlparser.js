@@ -1,5 +1,5 @@
-// e.g. url = "/public/pictures/image/logo.png?lan=en";
-UrlParser = function(request){
+"use strict"
+var UrlParser = function(request){
 	this.req=request
 	this.url=request.url;
 	this.controller="static";
@@ -16,33 +16,29 @@ UrlParser = function(request){
 // TODO: make this stable, i.e. work with MISSING parts in the url :)
 
 UrlParser.prototype.parse=function(){
-	// e.g. this.url = "/public/pictures/image/logo.png?lan=en";
-	
-	parts = this.url.split('/');
 	console.log("\n\n---------------------------------------------------------------")
-	if (parts[1] == parts[2]){ // somethimes there is /public/public -> don't know why
-		parts.splice(1)
-	}
-	console.log("Url Parts: ",parts)
+
+	var parts = this.url.split('/');
+	var fileandparam = parts.pop()
+	var fileandparamlist
+	var paramstr
+	var fileWithSuffix
+	var params
 	
 	if (parts.length > 2){
-		fileandparam = parts.pop()
-	
 		//console.log("TODO:   what happens for short, what with long pathes/urls?")
 		this.resource = parts.join('/').substring(1)
 	} else {
 		this.resource = "public"
-		fileandparam=parts.pop()
 	}
 
-
 	if (fileandparam) {
-		fileandparamlist=fileandparam.split("?")
+		fileandparamlist = fileandparam.split("?")
 		console.log("DEBUG: fileandparamlist=",fileandparamlist)
 	
 		if (fileandparamlist.length >1) { // ? was given
-			paramstr=fileandparamlist.pop() // => paramstr = 'lan=en&perpage=5'
-			fileWithSuffix=fileandparamlist[0] || ""
+			paramstr = fileandparamlist.pop() // => paramstr = 'lan=en&perpage=5'
+			fileWithSuffix = fileandparamlist[0] || ""
 		} else { // no ? given, i.e. no params => only one element in list
 			paramstr=""
 			fileWithSuffix=fileandparamlist.pop()
@@ -75,7 +71,9 @@ UrlParser.prototype.parse=function(){
 		this.format   = "html"
 	}
 
-	if(!(this.format=="html") && !(this.format == "css")){
+	if(	!(this.format=="html") && 
+		!(this.format == "css") && 
+		!(this.format == "js")){
 		this.content = "image"
 	}
 
@@ -88,7 +86,6 @@ UrlParser.prototype.parse=function(){
 	console.log("INFO format    = '"+this.format+"'")
 	console.log("INFO params    = '"+this.params+"'")
 	console.log("INFO content    = '"+this.content+"'")
-
 }
 
 module.exports.UrlParser=UrlParser
