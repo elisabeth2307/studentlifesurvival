@@ -11,83 +11,101 @@ var RecipeManager = function(view, res, parsedurlinfo){
 }
 
 RecipeManager.prototype.getAll = function(htmlData){
- 	var size
  	var listRecipe = []
  	var recView = this.recView
-	var recipe 
 
 	// get size of database -> asynchronus
-	db.dbsize(function(err, sizeData){
-		if (err){
+	db.keys('*', function(err, keys){
+		if(err){
 			console.log(err)
 			res.writeHead(200, {'content-type':'text/plain'});
 			res.end("ERROR get all data");
-		} else if (sizeData){
-			size = sizeData
+		} else if (keys.length > 0){
+			for(var i = 0, len = keys.length; i < len; i++) {
+				var index = parseInt(keys[i])
 
-			// get all entries
-			for(var j = 1; j <= size; j++){
-				db.get(j, function(error, data){
-					if(data) {
-						// add entry to list
-						listRecipe.push(data)
+				db.get(index, function(error, dataGet){
+					if(error){
+						console.log(error)
+						res.writeHead(200, {'content-type':'text/plain'});
+						res.end("ERROR get all data");
+					} else if (dataGet) {
+						listRecipe.push(dataGet)
 
-						// if list has same size as db -> send data to view
-						if(listRecipe.length == size){
+						if(listRecipe.length == keys.length){
 							recView.formatHtml(listRecipe, htmlData)
 						}
 					}
 				})
 			}
+		} else {
+			recView.formatEmpty(htmlData)
 		}
 	})
 }
 
-RecipeManager.prototype.update = function(id, field, newData){
-	var recipe
-
-	// get entry which shall be updated
-	db.get(id, function(err, data){
-		if(err){
-			console.log(err)		
-			res.writeHead(200, {'content-type':'text/plain'});
-			res.end("ERROR update data");
-		} else if (data) {
-			// write data for update in json object
-			recipe = JSON.parse(data)
-
-			// modify the wanted field
-			if (field == "title") {
-				recipe.title = newData
-			} else if (field == "imgsrc") {
-				recipe.imgsrc = newData
-			}
-			// set updated data to database
-			db.set(id, JSON.stringify(recipe))
-		}
+RecipeManager.prototype.update = function(paramData, id){
+	var newRecipe = {}
+	var data = {}
+	var keyvals, k, v
+		
+	paramData && paramData.split("&").forEach( function(keyval){
+		keyvals = keyval.split("=")
+		k=keyvals[0]
+		v=keyvals[1]
+		data[k]=v // we are inside a closure and cannot access this.data
 	})
-}
-
-RecipeManager.prototype.insert = function(title, description, imgsrc, id){
-	var recipe = {}
-	var newId
+	this.data = data
 
 	// fill object with parameter-data
-	recipe.id = id
-	recipe.title = title
-	recipe.description = description
-	recipe.imgsrc = imgsrc
+	newRecipe.id = data.id
+	newRecipe.title = data.title
+	newRecipe.description = data.description
+	newRecipe.imgsrc = data.imgsrc
 
-	// get database size for new id
-	db.dbsize(function(err, sizeData){
-		if (err){
+	// get entry which shall be updated
+	db.set(parseInt(id), JSON.stringify(newRecipe))
+	console.log("INFO: updating successful")
+}
+
+RecipeManager.prototype.insert = function(paramData){
+	var recipe = {}
+	var newId = 0
+	var index = 0
+	var data = {}
+	var keyvals, k, v
+
+	paramData && paramData.split("&").forEach( function(keyval){
+		keyvals = keyval.split("=")
+		k=keyvals[0]
+		v=keyvals[1]
+		data[k]=v // we are inside a closure and cannot access this.data
+	})
+	this.data = data
+
+	// fill object with parameter-data
+	recipe.id = data.id
+	recipe.title = data.title
+	recipe.description = data.description
+	recipe.imgsrc = data.imgsrc
+
+
+	db.keys('*', function(err, keys){
+		if (err) {
 			console.log(err)
 			res.writeHead(200, {'content-type':'text/plain'});
 			res.end("ERROR insert data");
-		} else if (sizeData) {
-			newId = parseInt(sizeData)+1
-			// set new entry
-			db.set(newId, JSON.stringify(recipe))
+		} else {
+			keys.sort()
+
+			while (newId == 0) {
+				if (keys[index] != index+1){
+					newId = index
+				}
+				index ++
+			}
+			db.set(parseInt(index), JSON.stringify(recipe))
+			console.log("INFO: inserting successful")
 		}
 	})
 }
@@ -100,7 +118,7 @@ RecipeManager.prototype.delete = function(id){
 			res.writeHead(200, {'content-type':'text/plain'});
 			res.end("ERROR delete data");
 		} else if (data) {
-			console.log("deleting successful")
+			console.log("INFO: deleting successful")
 		}
 	})
 }

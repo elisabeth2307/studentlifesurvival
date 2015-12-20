@@ -24,6 +24,9 @@ UrlParser.prototype.parse=function(){
 	var paramstr
 	var fileWithSuffix
 	var params
+	var keyvals
+	var k
+	var v
 	
 	if (parts.length > 2){
 		//console.log("TODO:   what happens for short, what with long pathes/urls?")

@@ -1,12 +1,22 @@
 {
  "1" : {	"id":"1",
- 			"title":"Cooking noodles",
+ 			"title":"Noodles",
 			"description":"Don't set the kitchen on fire",
   			"imgsrc":"/public/images/noodles.jpg"
 		},
  "2" : {	"id":"2",
- 			"title":"Cooking rice",
+ 			"title":"Rice",
 			"description":"Don't set the kitchen on fire",
   			"imgsrc":"/public/images/rice.jpg"
+		},
+ "3" : {	"id":"3",
+ 			"title":"Schnitzel",
+			"description":"Don't set the kitchen on fire",
+  			"imgsrc":"/public/images/schnitzel.jpg"
+		},
+ "4" : {	"id":"4",
+ 			"title":"Burger",
+			"description":"Don't set the kitchen on fire",
+  			"imgsrc":"/public/images/burger.jpg"
 		}
 }

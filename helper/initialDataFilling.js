@@ -8,27 +8,28 @@ filling = function(){
 	// database access is asynchronus -> interlaced construction needed for sequential flow
 	db.dbsize(function(err, data){
 		if(err){
+			console.log(err)
 			console.log("ERROR: not able to get database size")
 		} else {
 			// database is empty
 			if (data == 0){ 
-				console.log("INFO: filling database with initial-data")
+				console.log("INFO: filling database with initial-data from:",filename)
 
 				// read data file
 				fs.readFile(filename,function(err, data){
 					if (err){
-						console.log("ERROR: unable to read initial-data file: ",err)
+						console.log(err)
+						console.log("ERROR: unable to read initial-data file")
 					}else{
 						var recStr = data.toString('UTF-8')
 						var recipes = JSON.parse(recStr)
 						var count = Object.keys(recipes).length
 
-						console.log("DEBUG read recipes data from file: " + filename)
-						console.log("DEBUG amount of entries " + count)
 						// insert into database
 						for(var i = 1; i <= count; i++){
 							db.set(i, JSON.stringify(recipes[i]))
 						}
+						console.log("INFO: inserted " + count + " entries from file into database")
 					}
 				})
 			}

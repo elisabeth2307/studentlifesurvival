@@ -4,36 +4,30 @@ var RecipeView = require("../view/recipe_view.js")
 var RecipeManager = require("../model/recipe_mgmt.js")
 var Recipe = require("../model/recipe_model.js")
 
-var StaticController=function(parsedurlinfo, res){
+var StaticController=function(parsedurlinfo, req, res){
 	this.parsedurlinfo=parsedurlinfo
 	this.res = res
-	this.recManager = new RecipeManager
-	this.recipeView = new RecipeView(parsedurlinfo, res)
-	this.recipeManager = new RecipeManager(this.recipeView, parsedurlinfo, res)
-
+	this.req = req
 }
 
 StaticController.prototype.handle=function () {
 	console.log("\n--- Handling Static Content");
 
-	var res=this.res
+	var req = this.req
+	var res = this.res
+	var parsedurlinfo = this.parsedurlinfo
 	var format = this.parsedurlinfo.format
 	var id = this.parsedurlinfo.id
-	var recipeManager = this.recipeManager
 	var content = this.parsedurlinfo.content
 	var filename = this.parsedurlinfo.path
 	
 	console.log("INFO: serving static file '"+ filename)
 
-	//recipeManager.insert("mytitle", "mydes", "mysrc", "4")
-
-
 	fs.readFile(filename, function(err, data){
 			if (err){ // throw	err;
 				console.log(err)		
-				//console.log("TODO 404 page")
 				res.writeHead(200, {'content-type':'text/plain'});
-				res.end("Helpful ERROR static controller :-)");
+				res.end("ERROR static controller");
 			}else{ 
 				res.writeHead(200, {'content-type':''+content+'/'+format});
 				var utf8data = data.toString('UTF-8')
@@ -41,9 +35,13 @@ StaticController.prototype.handle=function () {
 				// handling images
 				if(content == "image"){
 					res.end(data, 'binary')
-				} else { // handling non binary content
+				} // handling non binary content
+				else { 
 					if(id == "cooking"){
-						recipeManager.getAll(utf8data) // evtl auslagern 
+						var crudContr = require("./crud_contr.js")
+						var crudController = new crudContr.CrudController(parsedurlinfo, req, res)
+						crudController.setHtmlData(utf8data)
+						crudController.handle()
 					} else {
 						res.end(utf8data);
 					}

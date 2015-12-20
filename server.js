@@ -2,7 +2,7 @@
 
 var config = require('./config.js')
 
-config.serverPort = (process.argv.length > 2) ? process.argv[2] : config.serverPort
+config.serverPort = (process.argv.length > 2) ? process.argv[2] : config.serverPort // if port -> argument
 
 console.log("Server starting on Port " + config.serverPort + " on " + config.server)
 console.log("Studentlife Survival")
