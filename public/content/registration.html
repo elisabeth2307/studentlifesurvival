@@ -8,20 +8,29 @@
 	<body>
 		<header>
 			<img class = "header-image" src = "/public/images/header.png">
-			
 		</header>
 
 		<div id="wrapper">
 
-            <nav id="nav">
-
+			<nav id="nav">
                 <form action="/public/content/cooking.html"><button class="btnNav">Cooking</button></form>
                 <form action="/public/content/cleaning.html"><button class="btnNav">Cleaning</button></form>
-                <form action="/public/content/washingl.html"><button class="btnNav">Washing</button></form>
+                <form action="/public/content/washing.html"><button class="btnNav">Washing</button></form>
+
+                <form action="/public/content/registration.html"><button class="register">Register</button></form>
 			</nav>
 
 			<section>
-				<h2>Washing!</h2>
+				<h2>Register now<h2>
+				<form id = "register">
+					E-mail-address:<br>
+					<input type="text" name="email">
+					<br>
+					Password:<br>
+					<input type="text" name="password">
+					<br><br>
+					<input type="submit" value="Submit">
+				</form>
 			</section>
 			
 			<footer>
