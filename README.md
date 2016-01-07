@@ -4,9 +4,9 @@ Authors: Tabea Halmschlager, Elisabeth Haberl
 
 # Install
 - clone repository
-- npm install
+- npm install (make sure kerberos development package is installed: apt-get install libkrb5-dev)
 - npm start
-* redis database will be filled at first time (if database is empty)
+* mongo database will be filled at first time (if database is empty)
 
 # What's the project about?
 Our service helps students, who live alone on their own for the first

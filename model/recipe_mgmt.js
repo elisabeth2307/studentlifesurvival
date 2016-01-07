@@ -1,8 +1,21 @@
 "use strict"
+var mycol = "recipes"
 var fs = require('fs')
-var redis = require("redis")
+var mongoose = require("mongoose")
 var config = require('../config.js')
-var db = redis.createClient(config.redisPort,config.server)
+var uri = "mongodb://"+config.server+":"+config.mongoPort+"/recipes"
+
+// connect to database via URI
+mongoose.connect(uri)
+
+// create a new schema for recipes (object)
+var recipeSchema = mongoose.Schema({
+    _id: Number,
+    title: String,
+    description: String,
+    imgsrc: String
+})
+var Recipe = mongoose.model('Recipe', recipeSchema);
 
 var RecipeManager = function(view, res, parsedurlinfo){
 	this.recView = view
@@ -10,116 +23,122 @@ var RecipeManager = function(view, res, parsedurlinfo){
 	this.res = res
 }
 
+// READ RECIPES -----------------------------------------------------------------------------------
 RecipeManager.prototype.getAll = function(htmlData){
  	var listRecipe = []
  	var recView = this.recView
 
-	// get size of database -> asynchronus
-	db.keys('*', function(err, keys){
-		if(err){
-			console.log(err)
-			res.writeHead(200, {'content-type':'text/plain'});
-			res.end("ERROR get all data");
-		} else if (keys.length > 0){
-			for(var i = 0, len = keys.length; i < len; i++) {
-				var index = parseInt(keys[i])
+ 	// find all recipes
+ 	Recipe.find(function (err, recipes) {
+  		if (err) {
+  			console.error(err)
+  		} else {
+  			console.log(recipes);
 
-				db.get(index, function(error, dataGet){
-					if(error){
-						console.log(error)
-						res.writeHead(200, {'content-type':'text/plain'});
-						res.end("ERROR get all data");
-					} else if (dataGet) {
-						listRecipe.push(dataGet)
-
-						if(listRecipe.length == keys.length){
-							recView.formatHtml(listRecipe, htmlData)
-						}
-					}
-				})
-			}
-		} else {
-			recView.formatEmpty(htmlData)
-		}
+  			// if there are recipes in the database
+  			if(recipes.length != 0) {
+  				// print all recipes to console
+  				console.log(recipes)
+  				// send recipes and htmlData to view
+  				recView.formatHtml(recipes, htmlData)
+  			} else {
+  				// if there are no recipes -> format an empty html site
+  				recView.formatEmpty(htmlData)
+  			}
+  		}
 	})
 }
 
+// DELETE UPDATE -----------------------------------------------------------------------------------
 RecipeManager.prototype.update = function(paramData, id){
-	var newRecipe = {}
 	var data = {}
 	var keyvals, k, v
 		
+	// get needed data as key-value pairs (stolen from mr feiner)
 	paramData && paramData.split("&").forEach( function(keyval){
 		keyvals = keyval.split("=")
 		k=keyvals[0]
 		v=keyvals[1]
-		data[k]=v // we are inside a closure and cannot access this.data
+		data[k]=v // this.data isn't possible at this point
 	})
 	this.data = data
 
-	// fill object with parameter-data
-	newRecipe.id = data.id
-	newRecipe.title = data.title
-	newRecipe.description = data.description
-	newRecipe.imgsrc = data.imgsrc
+	// find recipe to update via id
+	Recipe.findById(id, function (err, tmpRecipe) {
+  		if (err) {
+  			console.log(err)
+  		} else {
+  			console.log("INFO: recipe to modify: ")
+  			console.log(tmpRecipe)
 
-	// get entry which shall be updated
-	db.set(parseInt(id), JSON.stringify(newRecipe))
-	console.log("INFO: updating successful")
+  			// modify the recipe
+			tmpRecipe.title = data.title
+			tmpRecipe.description = data.description
+			tmpRecipe.imgsrc = data.imgsrc
+
+			// save it back to the database
+			tmpRecipe.save(function(err) {
+				if (err) {
+					console.log(err)
+				} else {
+					console.log("INFO: updating successful")
+				}
+			})
+  		}
+	})
 }
 
+// INSERT RECIPE -----------------------------------------------------------------------------------
 RecipeManager.prototype.insert = function(paramData){
-	var recipe = {}
-	var newId = 0
-	var index = 0
 	var data = {}
 	var keyvals, k, v
 
-	paramData && paramData.split("&").forEach( function(keyval){
+	// get needed data as key-value pairs (stolen from mr feiner)
+	paramData && paramData.split("&").forEach(function(keyval) {
 		keyvals = keyval.split("=")
-		k=keyvals[0]
-		v=keyvals[1]
-		data[k]=v // we are inside a closure and cannot access this.data
+		k = keyvals[0]
+		v = keyvals[1]
+		data[k] = v // this.data isn't possible at this point
 	})
 	this.data = data
 
-	// fill object with parameter-data
-	recipe.id = data.id
-	recipe.title = data.title
-	recipe.description = data.description
-	recipe.imgsrc = data.imgsrc
+	// prepare new recipe for inserting
+	var newRecipe = new Recipe({ 
+    	_id: data.id,
+    	title: data.title,
+    	description: data.description,
+    	imgsrc: data.imgsrc
+	})
 
-
-	db.keys('*', function(err, keys){
-		if (err) {
-			console.log(err)
-			res.writeHead(200, {'content-type':'text/plain'});
-			res.end("ERROR insert data");
-		} else {
-			keys.sort()
-
-			while (newId == 0) {
-				if (keys[index] != index+1){
-					newId = index
-				}
-				index ++
-			}
-			db.set(parseInt(index), JSON.stringify(recipe))
-			console.log("INFO: inserting successful")
-		}
+	// save new recipe in database
+	newRecipe.save(function (err, data) {
+  		if (err) {
+  			console.error(err)
+  		} else {
+  			console.log("INFO: new recipe inserted")
+  		}
 	})
 }
 
+// DELETE RECIPE -----------------------------------------------------------------------------------
 RecipeManager.prototype.delete = function(id){
-	// delete entry with parameter-id
-	db.del(id, function(err, data){
-		if (err) {
-			console.log(err)
-			res.writeHead(200, {'content-type':'text/plain'});
-			res.end("ERROR delete data");
-		} else if (data) {
-			console.log("INFO: deleting successful")
-		}
+	// get entry from database via id
+	Recipe.findById(id, function (err, tmpRecipe) {
+  		if (err) {
+  			console.log(err)
+  		} else {
+  			console.log("INFO: recipe to delete: ")
+  			console.log(tmpRecipe)
+
+  			// remove the recipe from the databasee
+			tmpRecipe.remove(function(err) {
+				if (err) {
+					console.log(err)
+				} else {
+					console.log("INFO: deleting of recipe successful")
+				}
+			})
+  		}
 	})
 }
 

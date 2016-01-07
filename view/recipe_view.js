@@ -15,7 +15,7 @@ RecipeView.prototype.formatHtml = function(data,htmlTemplate) {
 	var recipes = ""
 
 	for (var i = 0; i < data.length; i++){
-		var recipe = JSON.parse(data[i])
+		var recipe = data[i]
 
 		recList += "<a href = #" + recipe.title + ">" + recipe.title + "</a><br>"
 
