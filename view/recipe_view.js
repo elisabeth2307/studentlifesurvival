@@ -4,9 +4,6 @@ var fs = require('fs')
 var RecipeView = function(parsedurlinfo, res ){
 	this.parsedurlinfo = parsedurlinfo
 	this.res = res
-
-	//this.layout="view/layout.html"
-	//this.rec	="view/song/song_template.html"
 }
 
 RecipeView.prototype.formatHtml = function(data,htmlTemplate) {
@@ -17,11 +14,11 @@ RecipeView.prototype.formatHtml = function(data,htmlTemplate) {
 	for (var i = 0; i < data.length; i++){
 		var recipe = data[i]
 
-		recList += "<a href = #" + recipe.title + ">" + recipe.title + "</a><br>"
+		recList += "><a href = #" + recipe.title + ">" + recipe.title + "</a><br>"
 
 		recipes += "<h3><a name = " + recipe.title + ">" + recipe.title + "</a></h3>"
 		recipes += "<p>" + recipe.description + "</p>"
-		recipes += "<img src = \"" + recipe.imgsrc + "\" >"
+		recipes += "<img src = \"" + recipe.imgsrc + "\" class = \"center\">"
 	}
 
 	recList += "</ul>"

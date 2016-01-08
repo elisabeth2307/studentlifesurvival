@@ -9,8 +9,9 @@ console.log("Studentlife Survival")
 console.log("Version: " + config.version)
 console.log("Author: " + config.author)
 
-var databasecheck = require('./helper/initialDataFilling.js')
-databasecheck.filling() // note that it's asynchronus -> console output might appear later
+var RecipeManager = require('./model/recipe_mgmt.js')
+var recipeManager = new RecipeManager(null, null, null)
+recipeManager.filling() // note that it's asynchronus -> console output might appear later
 
 var theapp = require('./controller/master.js')
 theapp.startup()

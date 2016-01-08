@@ -37,7 +37,7 @@ nav {
 	
 form {
 		float:left;
-		background-color: #555555;
+		background-color: #D8D8D8;
 		}
 
 #register {
@@ -112,4 +112,23 @@ p {
 		height: 250px;
 		}
 
+.center {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		height: 250px;
+		margin-bottom: 20px;
+}
 
+a:link {
+	color:black;
+}
+
+a:visited {
+	color:grey;
+}
+
+a:hover {
+	color:black;
+	text-weight: bold;
+}

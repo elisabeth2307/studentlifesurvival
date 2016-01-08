@@ -1,22 +1,18 @@
 {
- "1" : {	"id":"1",
+ "1" : {	"_id":"1",
  			"title":"Noodles",
-			"description":"Don't set the kitchen on fire",
+			"description":"Drop a pinch of salt in the boiling water. This helps flavor the noodles and helps the water boil at a higher temperature, reducing the cooking time. Place the noodles in the boiling water. If you have long, thin noodles, like spaghetti, you might need to break them in half to fit them all in the pot. Don't add the noodles until the water has come to a rolling boil, or they'll end up getting soggy and mushy. Add the noodles gently so you don't splash hot water back onto your skin. Boil the noodles until tender. Depending on how thick the noodles are, you may need to boil them from anywhere from 5 minutes to 12. Read the instructions on your noodle package to determine the correct time. Test to see whether the noodles are done. Pull out one noodle with a fork or slotted spoon. Taste the noodle. It should be soft enough to easily chew, but still have a bit of bite, meaning the noodle is 'al dente.' Remove the noodles from heat and drain. Pour the noodles into a colander to drain the water away. Put the noodles in a bowl and add a few drops of olive oil. Stirring in just enough oil to finely coat the noodles keeps them from sticking together.",
   			"imgsrc":"/public/images/noodles.jpg"
 		},
- "2" : {	"id":"2",
+ "2" : {	"_id":"2",
  			"title":"Rice",
-			"description":"Don't set the kitchen on fire",
+			"description":"Rinse your rice: It's good practice to rinse your rice in a strainer before cooking. This isn't strictly necessary, but it will rinse off any dusty starch on the surface of the rice along with any leftover chaff or stray particles. (Some rices have more starchy coating than others.) Measure the rice and water: For most rice, use a 1:2 ratio of one cup of rice to two cups of water. Measure a half cup of uncooked rice per person and scale this ratio up or down depending on how much you're making. Some rice varieties will need a little less or a little more water as it cooks, so check the package for specific instructions. Bring the water to a boil: Bring the water to boil in a small saucepan. Rice expands as it cooks, so use a saucepan large enough to accommodate. A 2-quart saucepan for one to two cups of uncooked rice is a good size. Add the rice: When the water has come to a boil, stir in the rice, salt, and butter (if using), and bring it back to a gentle simmer. Cover and cook: Cover the pot and turn the heat down to low. Don't take off the lid while the rice is cooking — this lets the steam out and affects the cooking time. Rice is done when tender: Start checking the rice around 18 minutes for white rice and 30 minutes for brown rice. When done, the rice will be firm but tender, and no longer crunchy. It is fine if it's slightly sticky but shouldn't be gummy. If there is still water left in the pan when the rice is done, tilt the pan to drain it off. Turn off the heat and let stand a few minutes, covered. This steams the rice just a little more. Remove the lid and fluff: Fluff the rice with a spoon or a fork, and let it sit for a few moments to dry out and lose that wet, just-steamed texture. Serve the rice: Leftover rice keeps well in the fridge for several days, so you can make extra ahead to serve later.",
   			"imgsrc":"/public/images/rice.jpg"
 		},
- "3" : {	"id":"3",
+ "3" : {	"_id":"3",
  			"title":"Schnitzel",
-			"description":"Don't set the kitchen on fire",
+			"description":"Pound the veal well on both sides. After pounding flat dip both sides into the flour. Blend the eggs with one tbsp. oil and some salt and pepper and pull the fillets through this mixture cover the fillets with bread-crumbs, which should cover all meat, but do not press the bread-crumbs on to the meat with your fingers or they will become hard when frying. Fry in a small amount of oil on medium heat for about 5 minutes on each side or until they are golden brown.",
   			"imgsrc":"/public/images/schnitzel.jpg"
-		},
- "4" : {	"id":"4",
- 			"title":"Burger",
-			"description":"Don't set the kitchen on fire",
-  			"imgsrc":"/public/images/burger.jpg"
 		}
+
 }
