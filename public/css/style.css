@@ -9,6 +9,7 @@ body {
 		width: 100%;
 		margin: 0 auto;
 		background-color: #D8D8D8;
+		padding-bottom:50px;
 		}
 		
 		
@@ -118,6 +119,7 @@ p {
 		margin-right: auto;
 		height: 250px;
 		margin-bottom: 20px;
+		text-align:center;
 }
 
 a:link {
@@ -130,5 +132,33 @@ a:visited {
 
 a:hover {
 	color:black;
-	text-weight: bold;
+	font-weight: bold;
+}
+
+.input {
+	text-align: right;
+	margin: auto;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 20px;
+}
+
+.inputfield {
+	width: 400px;
+}
+
+.infotext {
+	font-size: 14pt;
+	padding-bottom:auto;
+	margin-top: 200px;
+	text-align: center;
+}
+
+.text {
+	font-size:14pt;
+}
+
+.textCenter {
+	text-align: center;
 }

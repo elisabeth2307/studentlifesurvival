@@ -9,6 +9,7 @@ var CrudController = function(parsedurlinfo, req, res){
 	this.recipeView = new RecipeView(parsedurlinfo, res)
 	this.recipeManager = new RecipeManager(this.recipeView, parsedurlinfo, res)
 	this.htmlData = ""
+	this.headerData = ""
 }
 
 CrudController.prototype.handle = function() {
@@ -19,11 +20,14 @@ CrudController.prototype.handle = function() {
 	var req = this.req
 	var paramData = this.parsedurlinfo.params
 	var htmlData = this.htmlData
+	var headerData = this.headerData
 
+	// GET --------------------------------------------------------------
 	if (requestedMethod == "GET") {
 		console.log("INFO: getting all entries")
-		recipeManager.getAll(htmlData)
+		recipeManager.getAll(htmlData, headerData)
 	}
+	// DELETE --------------------------------------------------------------
 	else if (requestedMethod == "DELETE") {
 		console.log("INFO: deleting entry with id: "+id)
 		recipeManager.delete(id)
@@ -31,9 +35,11 @@ CrudController.prototype.handle = function() {
 		res.writeHead(200, {'content-type':'text/plain'});
 		res.end("Deleting of id \""+id+"\" was successful!\n");
 	} 
+	// POST --------------------------------------------------------------
 	else if (requestedMethod == "POST") {
 		console.log("INFO: inserting new recipe")
 
+		// get post-data
 		var paramData = ''
 		req.on("data", function(data){paramData +=data})
 			req.on("end",function(){
@@ -46,9 +52,11 @@ CrudController.prototype.handle = function() {
 		res.writeHead(200, {'content-type':'text/plain'});
 		res.end("Insertion was successful!\n");
 	} 
+	// PUT --------------------------------------------------------------
 	else if (requestedMethod == "PUT") {
 		console.log("INFO: updating recipe")
 		
+		// get post-data
 		var paramData = ''
 		req.on("data", function(data){paramData +=data})
 			req.on("end",function(){
@@ -63,8 +71,9 @@ CrudController.prototype.handle = function() {
 	}
 }
 
-CrudController.prototype.setHtmlData = function (htmlData){
+CrudController.prototype.setHtmlData = function (htmlData, headerData){
 	this.htmlData = htmlData
+	this.headerData = headerData
 }
 
 module.exports.CrudController = CrudController

@@ -19,7 +19,7 @@ startup = function(){
 		else if (req.method == "DELETE") {
 			handlerController = new crudContr.CrudController(urlparser, req, res)
 		} 
-		else if (req.method == "POST"){
+		else if (req.method == "POST" && urlparser.id == "cooking"){
 			handlerController = new crudContr.CrudController(urlparser, req, res)
 		} 
 		else if (req.method == "PUT"){

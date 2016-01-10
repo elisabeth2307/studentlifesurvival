@@ -11,8 +11,7 @@ mongoose.connect(uri)
 
 // create a new schema for recipes (object)
 var recipeSchema = mongoose.Schema({
-    _id: Number,
-    title: String,
+    _id: String,
     description: String,
     imgsrc: String
 })
@@ -26,10 +25,12 @@ var RecipeManager = function(view, res, parsedurlinfo){
 
 // INITIAL FILLING --------------------------------------------------------------------------------
 RecipeManager.prototype.filling = function(){
-	// find all recipes in database recipes
+	// find all recipes in database recipes and check if database is empty
 	Recipe.find(function (err, recipes) {
   		if (err) {
   			console.error(err)
+  			//res.writeHead(200, {'content-type':'text/plain'});
+			//res.end("ERROR recipe management - find recipes for initial filling");
   		} else {
   			// if the database is empty...
   			if (!recipes.length) {
@@ -37,19 +38,18 @@ RecipeManager.prototype.filling = function(){
   				fs.readFile(filename, function(err, data) {
   					if (err) {
   						console.log(err)
-  						console.log("ERROR: unable to read recipes from file")
+  						//res.writeHead(200, {'content-type':'text/plain'});
+						//res.end("ERROR: unable to read recipes from file")
   					} else {
   						var recipes = JSON.parse(data) // parse data to json
-  						console.log(recipes)
   						var length = Object.keys(recipes).length // get amount of recipes
 
-  						// loop which insterts all recipes into database
+  						// loop which inserts all recipes into database
   						for(var i = 1; i <= length; i++) {
   							var tmpRecipe = recipes[i]
   							// prepare new recipe for inserting
 							var newRecipe = new Recipe({ 
     							_id: tmpRecipe._id,
-    							title: tmpRecipe.title,
     							description: tmpRecipe.description,
     							imgsrc: tmpRecipe.imgsrc
 							})
@@ -58,45 +58,42 @@ RecipeManager.prototype.filling = function(){
 							newRecipe.save(function (err, data) {
   								if (err) {
   									console.error(err)
+  									//res.writeHead(200, {'content-type':'text/plain'});
+									//res.end("ERROR recipe manager - not able to save new recipe");
   								} else {
   									console.log("INFO: new recipe inserted")
   								}
 							})
-
   						}
   					}
   				})
 
-  			} else {
-  				// if there are already recipes in the database
-  				console.log("INFO: data already in database - no filling of recicpes")
+  			} else { // if there are already recipes in the database
+  				console.log("INFO: recipes already in database - no filling")
   			}
   		}
 	})	
 }
 
 // READ RECIPES -----------------------------------------------------------------------------------
-RecipeManager.prototype.getAll = function(htmlData){
+RecipeManager.prototype.getAll = function(htmlData, headerData){
  	var listRecipe = []
  	var recView = this.recView
 
- 	console.log("in get")
  	// find all recipes
  	Recipe.find(function (err, recipes) {
   		if (err) {
   			console.error(err)
+  			//res.writeHead(200, {'content-type':'text/plain'});
+			//res.end("ERROR recipe management - not able to fetch recipes");
   		} else {
-  			console.log(recipes);
-
   			// if there are recipes in the database
   			if(recipes.length != 0) {
-  				// print all recipes to console
-  				console.log(recipes)
   				// send recipes and htmlData to view
-  				recView.formatHtml(recipes, htmlData)
+  				recView.formatHtml(recipes, htmlData, headerData)
   			} else {
   				// if there are no recipes -> format an empty html site
-  				recView.formatEmpty(htmlData)
+  				recView.formatEmpty(htmlData, headerData)
   			}
   		}
 	})
@@ -106,7 +103,7 @@ RecipeManager.prototype.getAll = function(htmlData){
 RecipeManager.prototype.update = function(paramData, id){
 	var data = {}
 	var keyvals, k, v
-		
+
 	// get needed data as key-value pairs (stolen from mr feiner)
 	paramData && paramData.split("&").forEach( function(keyval){
 		keyvals = keyval.split("=")
@@ -116,27 +113,12 @@ RecipeManager.prototype.update = function(paramData, id){
 	})
 	this.data = data
 
-	// find recipe to update via id
-	Recipe.findById(id, function (err, tmpRecipe) {
+	Recipe.findByIdAndUpdate(id, {$set: {description: data.description, imgsrc: data.imgsrc }}, function (err, recipe) {
   		if (err) {
   			console.log(err)
   		} else {
-  			console.log("INFO: recipe to modify: ")
-  			console.log(tmpRecipe)
-
-  			// modify the recipe
-			tmpRecipe.title = data.title
-			tmpRecipe.description = data.description
-			tmpRecipe.imgsrc = data.imgsrc
-
-			// save it back to the database
-			tmpRecipe.save(function(err) {
-				if (err) {
-					console.log(err)
-				} else {
-					console.log("INFO: updating successful")
-				}
-			})
+  			console.log("Updatet recipe: ")
+  			console.log(recipe)
   		}
 	})
 }
@@ -158,7 +140,6 @@ RecipeManager.prototype.insert = function(paramData){
 	// prepare new recipe for inserting
 	var newRecipe = new Recipe({ 
     	_id: data.id,
-    	title: data.title,
     	description: data.description,
     	imgsrc: data.imgsrc
 	})
@@ -167,8 +148,12 @@ RecipeManager.prototype.insert = function(paramData){
 	newRecipe.save(function (err, data) {
   		if (err) {
   			console.error(err)
+  			//res.writeHead(200, {'content-type':'text/plain'});
+			//res.end("ERROR recipe management - not able to save new recipe into database");
   		} else {
   			console.log("INFO: new recipe inserted")
+  			//res.writeHead(200, {'content-type':'text/plain'});
+			//res.end("ERROR recipe management - not able to save new recipe into database");
   		}
 	})
 }
@@ -181,6 +166,8 @@ RecipeManager.prototype.delete = function(id){
 	Recipe.findById(id, function (err, tmpRecipe) {
   		if (err) {
   			console.log(err)
+  			//res.writeHead(200, {'content-type':'text/plain'});
+			//res.end("ERROR recipe management - not able to fetch recipe from database for deleting");
   		} else {
   			console.log("INFO: recipe to delete: "+tmpRecipe)
 
@@ -189,8 +176,12 @@ RecipeManager.prototype.delete = function(id){
 				tmpRecipe.remove(function(err) {
 					if (err) {
 						console.log(err)
+  						//res.writeHead(200, {'content-type':'text/plain'});
+						//res.end("ERROR recipe management - not able to delete recipe");
 					} else {
 						console.log("INFO: deleting of recipe successful")
+  						//res.writeHead(200, {'content-type':'text/plain'});
+						//res.end("Deleting successful");
 					}
 				})
 			}
