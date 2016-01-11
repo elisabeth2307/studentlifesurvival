@@ -1,4 +1,3 @@
-recipe_view.js: what to do when no data available?
-static_contr.js: outsource functionality in cooking-section?
+recipe_mgmt.js: update, replace input string
 master.js -> cookies
 model/recipe_model.js benutzen
