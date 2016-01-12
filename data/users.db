@@ -1,0 +1,10 @@
+{
+ "1" : {	"id":"eli",
+			"email":"",
+			"password":"geheim"
+		},
+ "2" : {	"id":"tabea",
+ 			"email":"tabea.halmschlager@edu.fh-joanneum.at",
+ 			"password":"secret"
+		}
+}

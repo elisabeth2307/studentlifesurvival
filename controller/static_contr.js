@@ -24,6 +24,7 @@ StaticController.prototype.handle=function () {
 	
 	console.log("INFO: serving static file '"+ filename)
 
+
 	// load the file itself
 	fs.readFile(filename, function(err, data){
 			if (err){ // throw	err;

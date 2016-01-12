@@ -30,7 +30,7 @@ RecipeManager.prototype.filling = function(){
             // loop which inserts data into database
             for(var i = 1; i <= length; i++) {
               var tmpRecipe = recipes[i]
-              console.log(tmpRecipe)
+              //console.log(tmpRecipe)
 
               // store recipes into hash "recipes"
               db.hset("recipes", tmpRecipe.id, JSON.stringify(tmpRecipe), function(errorSet, answer){
