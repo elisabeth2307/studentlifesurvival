@@ -2,12 +2,16 @@
 var fs = require("fs")
 var redis = require("redis")
 var config = require('../config.js')
+var Mailer = require('../helper/mailer.js')
 var db = redis.createClient(config.redisPort, config.server)
 var filename = "./data/users.db"
+
 
 var RegisManager = function(res, parsedurlinfo){
 	this.parsedurlinfo = parsedurlinfo
 	this.res = res
+  this.mailer = new Mailer()
+
 }
 
 // INITIAL FILLING --------------------------------------------------------------------------------
@@ -49,6 +53,7 @@ RegisManager.prototype.filling = function(){
 // INSERT USER -----------------------------------------------------------------------------------
 RegisManager.prototype.insert = function(paramData){
 	
+  var token = "tjri8374z6tgrhwdusz7tgr3hjuwew"
   var data = {}
 	var keyvals, k, v
 
@@ -61,12 +66,34 @@ RegisManager.prototype.insert = function(paramData){
 	})
 	this.data = data
 
-  //TODO random token, bool if valid email
+
+  //set 'random' token, and a bool if email adress is valid
+  this.data.valid = false
+  this.data.token = token
+
+  //send email to given adress
+  console.log("\nCALLING MAILER\n")
+  this.mailer.sendMail(data.email, data.token)
+
 
   db.hset("users", data.id, JSON.stringify(data), function(err, data){
     if (err) {
       console.log(err)
     } 
+  })
+
+}
+
+
+// DELETE USER -----------------------------------------------------------------------------------
+RegisManager.prototype.delete = function(id){
+
+  db.hdel("users", id, function(err, data){
+    if (err) {
+      console.log(err)
+    } else {
+      console.log(data)
+    }
   })
 
 }

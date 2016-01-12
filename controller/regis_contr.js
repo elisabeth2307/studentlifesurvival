@@ -24,12 +24,7 @@ RegistrationController.prototype.handle = function() {
 	console.log("INFO: registration controller")
 
 	if (requestedMethod != "POST")
-		console.log("!!!! something went wrong !!!!")
-
-
-	console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-	console.log("TRYING TO INSERT USER")
-	console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+		console.log("!!!! something went wrong... you shouldn't be here !!!!")
   
 
 	// get post-data

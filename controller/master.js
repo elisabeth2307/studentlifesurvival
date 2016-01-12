@@ -24,7 +24,6 @@ startup = function(){
 			handlerController = new crudContr.CrudController(urlparser, req, res)
 		} 
 		else if (req.method == "POST" && urlparser.id == "registration"){
-			console.log("HELLO I'M CALLING REGISCONTR")
 			handlerController = new regisContr.RegistrationController(urlparser, req, res)
 		} 
 		else if (req.method == "PUT"){
