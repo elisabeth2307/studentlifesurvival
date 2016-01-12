@@ -5,14 +5,17 @@ var RecipeView = function(parsedurlinfo, res ){
 	this.res = res
 }
 
-RecipeView.prototype.formatHtml = function(data,htmlTemplate, headerData) {
+RecipeView.prototype.formatHtml = function(data, htmlTemplate, headerData) {
 	var result = htmlTemplate.toString()
 	var recList = "<ul>" // recipe list in the beginning for a better overview
 	var recipes = ""
 	var content = ""
 
-	for (var i = 0; i < data.length; i++){
-		var recipe = data[i]
+	//var data = JSON.parse(data)
+	var length = Object.keys(data).length
+
+	for(var recipe in data){
+		recipe = JSON.parse(data[recipe])
 
 		// for overview of recipes
 		recList += "><a href = #" + recipe.id + ">" + recipe.id + "</a><br>"

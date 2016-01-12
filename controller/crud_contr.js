@@ -43,7 +43,13 @@ CrudController.prototype.handle = function() {
 		var paramData = ''
 		req.on("data", function(data){paramData +=data})
 			req.on("end",function(){
+
+				// replace with space
 				paramData = paramData.replace(/%20/g, ' ')
+				paramData = paramData.replace(/\+/g, ' ')
+				// replace with slash
+				paramData = paramData.replace(/%2F/g, '/')
+
 				console.log("POST-DATA: ", paramData)
 				recipeManager.insert(paramData)
 			} 

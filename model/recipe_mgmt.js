@@ -13,6 +13,7 @@ var RecipeManager = function(view, res, parsedurlinfo){
 
 // INITIAL FILLING --------------------------------------------------------------------------------
 RecipeManager.prototype.filling = function(){
+  
   // check if the database is empty -> if empty -> fill initial data from file
   db.hlen("recipes", function(err, data){
     if (err) {
@@ -43,11 +44,13 @@ RecipeManager.prototype.filling = function(){
       }
     }
   })
+
 }
 
 // READ RECIPES -----------------------------------------------------------------------------------
 RecipeManager.prototype.getAll = function(htmlData, headerData){
- 	var listRecipe = []
+ 	
+  var listRecipe = []
  	var recView = this.recView
 
  	// find all recipes
@@ -64,11 +67,13 @@ RecipeManager.prototype.getAll = function(htmlData, headerData){
       }
     }
   })
+
 }
 
 // DELETE UPDATE -----------------------------------------------------------------------------------
 RecipeManager.prototype.update = function(paramData, id){
-	var data = {}
+	
+  var data = {}
 	var keyvals, k, v
 
 	// get needed data as key-value pairs (stolen from mr feiner)
@@ -80,12 +85,12 @@ RecipeManager.prototype.update = function(paramData, id){
 	})
 	this.data = data
 
-
 }
 
 // INSERT RECIPE -----------------------------------------------------------------------------------
 RecipeManager.prototype.insert = function(paramData){
-	var data = {}
+	
+  var data = {}
 	var keyvals, k, v
 
 	// get needed data as key-value pairs (stolen from mr feiner)
@@ -115,6 +120,7 @@ RecipeManager.prototype.delete = function(id){
       console.log(data)
     }
   })
+
 }
 
 module.exports = RecipeManager
