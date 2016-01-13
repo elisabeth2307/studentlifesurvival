@@ -1,6 +1,7 @@
 "use strict"
 var fs = require("fs")
 var redis = require("redis")
+var crypto = require("crypto")
 var config = require('../config.js')
 var Mailer = require('../helper/mailer.js')
 var db = redis.createClient(config.redisPort, config.server)
@@ -53,7 +54,14 @@ RegisManager.prototype.filling = function(){
 // INSERT USER -----------------------------------------------------------------------------------
 RegisManager.prototype.insert = function(paramData){
 	
-  var token = "tjri8374z6tgrhwdusz7tgr3hjuwew"
+  // create random token
+  exports.createToken = function(callback) {
+    const buf = crypto.randomBytes(32);
+    return buf.toString('hex');
+  }
+  var token = exports.createToken()
+  
+  
   var data = {}
 	var keyvals, k, v
 
@@ -67,7 +75,7 @@ RegisManager.prototype.insert = function(paramData){
 	this.data = data
 
 
-  //set 'random' token, and a bool if email adress is valid
+  //set token, and a bool if email adress is valid
   this.data.valid = false
   this.data.token = token
 

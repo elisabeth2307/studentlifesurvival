@@ -11,12 +11,12 @@ var Mailer = function(){
 
 Mailer.prototype.sendMail = function(email, token){
 
-	console.log("SENDING MAIL")
+	console.log("SENDING MAIL to " + email)
 	this.transporter.sendMail({
 		from: 'studentlifesurvival@fh-joanneum.at',
-		to: this.adress,
+		to: email,
 		subject: 'registration',
-		text: 'Please confirm your email adress:'+this.token,
+		text: 'Please confirm your email adress: '+token,
 
 	}, function(err, info) {
 		if (!err) 
