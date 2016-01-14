@@ -25,7 +25,6 @@ RegistrationController.prototype.handle = function() {
 
 	if (requestedMethod != "POST")
 		console.log("!!!! something went wrong... you shouldn't be here !!!!")
-  
 
 	// get post-data
 	var paramData = ''
@@ -35,6 +34,7 @@ RegistrationController.prototype.handle = function() {
 		// replace @
 		paramData = paramData.replace(/%40/g, '@')
 
+		//if user already exists -> login
 		console.log("POST-DATA: ", paramData)
 		regisManager.insert(paramData)
 	});

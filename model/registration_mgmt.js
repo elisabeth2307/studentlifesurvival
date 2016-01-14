@@ -79,6 +79,11 @@ RegisManager.prototype.insert = function(paramData){
   this.data.valid = false
   this.data.token = token
 
+  //check if user exists
+  if (db.hget (data.id)) {
+    console.log("user already exists")
+  }
+
   //send email to given adress
   console.log("\nCALLING MAILER\n")
   this.mailer.sendMail(data.email, data.token)
@@ -88,6 +93,24 @@ RegisManager.prototype.insert = function(paramData){
     if (err) {
       console.log(err)
     } 
+  })
+
+}
+
+
+// READ USERS -----------------------------------------------------------------------------------
+RegisManager.prototype.get = function(userid){
+  
+  var listUsers = []
+
+  // find all recipes
+  db.hget(("users", userid), function(err, data){
+    if (err) {
+      console.log(err)
+    } else {
+      console.log(data)
+      return data
+    }
   })
 
 }
