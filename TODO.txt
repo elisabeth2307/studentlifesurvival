@@ -1,4 +1,3 @@
-recipe_mgmt.js: update, replace input string
 master.js -> cookies
 model/recipe_model.js benutzen
 

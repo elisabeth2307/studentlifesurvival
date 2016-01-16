@@ -1,0 +1,22 @@
+<script>
+	window.onload = function(){
+
+		var url = window.location.href
+		var result = url.substring(url.search("id=")+3)
+
+		document.getElementById("updateHeadline").innerHTML = document.getElementById("updateHeadline").innerHTML + result
+
+	}
+</script>
+
+<h2 id="updateHeadline">Update recipe: </h2>
+				
+<form method=POST action="/" class="input">
+	Description: <textarea class="inputfield" type="text" name="description" id="updateDescription">Update here</textarea><br>
+	Image Source: <input class="inputfield" type="text" name="imgsrc" id="updateImgsrc"><br>
+	<input type="submit" value="Submit" onclick=handleUpdate()><br>
+</form>
+
+
+<img src = "../images/cooking.jpg" class="center">
+			

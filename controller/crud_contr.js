@@ -24,22 +24,22 @@ CrudController.prototype.handle = function() {
 
 	// GET --------------------------------------------------------------
 	if (requestedMethod == "GET") {
-		console.log("INFO: getting all entries")
-		recipeManager.getAll(htmlData, headerData)
+		console.log("INFO: getting all recipes")
+		recipeManager.getAll(htmlData, headerData) // call manager (database access needed)
 	}
 	// DELETE --------------------------------------------------------------
 	else if (requestedMethod == "DELETE") {
 		console.log("INFO: deleting entry with id: "+id)
-		recipeManager.delete(id)
+		recipeManager.delete(id) // call manager and delete from database
 
 		res.writeHead(200, {'content-type':'text/plain'});
-		res.end("Deleting of id \""+id+"\" was successful!\n");
+		res.end("Delete task of id \""+id+"\" done!\n");
 	} 
 	// POST --------------------------------------------------------------
 	else if (requestedMethod == "POST") {
 		console.log("INFO: inserting new recipe")
 
-		// get post-data
+		// get post-data from request (source: mr feiner)
 		var paramData = ''
 		req.on("data", function(data){paramData +=data})
 			req.on("end",function(){
@@ -51,32 +51,36 @@ CrudController.prototype.handle = function() {
 				paramData = paramData.replace(/%2F/g, '/')
 
 				console.log("POST-DATA: ", paramData)
-				recipeManager.insert(paramData)
+				recipeManager.insert(paramData) // call manager and insert into database
 			} 
 		);
 
 		res.writeHead(200, {'content-type':'text/plain'});
-		res.end("Insertion was successful!\n");
+		res.end("Insert task done!\n");
 	} 
 	// PUT --------------------------------------------------------------
 	else if (requestedMethod == "PUT") {
 		console.log("INFO: updating recipe")
 		
-		// get post-data
+		// get post-data from request (source: mr feiner)
 		var paramData = ''
 		req.on("data", function(data){paramData +=data})
 			req.on("end",function(){
+
+				// replace with space
 				paramData = paramData.replace(/%20/g, ' ')
+
 				console.log("POST-DATA: ", paramData)
-				recipeManager.update(paramData, id)
+				recipeManager.update(paramData, id) // call manager and update in database
 			} 
 		);
 
 		res.writeHead(200, {'content-type':'text/plain'});
-		res.end("Updating was successful!\n");
+		res.end("Update task done!\n");
 	}
 }
 
+// needed for site cooking
 CrudController.prototype.setHtmlData = function (htmlData, headerData){
 	this.htmlData = htmlData
 	this.headerData = headerData

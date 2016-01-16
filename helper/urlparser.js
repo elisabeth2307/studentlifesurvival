@@ -1,4 +1,6 @@
 "use strict"
+// author: mr feiner and a bit elisabeth haberl
+
 var UrlParser = function(request){
 	this.req=request
 	this.url=request.url;
@@ -7,7 +9,7 @@ var UrlParser = function(request){
 	this.path="";
 	this.resource="";
 	this.id=null;
-	this.format=null;
+	this.format="";
 	this.params={}
 	
 	this.parse();
@@ -20,26 +22,21 @@ UrlParser.prototype.parse=function(){
 
 	var parts = this.url.split('/');
 	var fileandparam = parts.pop()
-	var fileandparamlist
-	var paramstr
-	var fileWithSuffix
-	var params
-	var keyvals
-	var k
-	var v
-	
+	var fileandparamlist, paramstr, fileWithSuffix, params, keyvals, k, v
+
+	// set resource 
 	if (parts.length > 2){
-		//console.log("TODO:   what happens for short, what with long pathes/urls?")
 		this.resource = parts.join('/').substring(1)
 	} else {
-		this.resource = "public"
+		this.resource = "public/content" // handles localhost/cooking.html etc.
 	}
 
+	// handle files and parameter
 	if (fileandparam) {
 		fileandparamlist = fileandparam.split("?")
 		console.log("DEBUG: fileandparamlist=",fileandparamlist)
 	
-		if (fileandparamlist.length >1) { // ? was given
+		if (fileandparamlist.length >1) { // char ? was given
 			paramstr = fileandparamlist.pop() // => paramstr = 'lan=en&perpage=5'
 			fileWithSuffix = fileandparamlist[0] || ""
 		} else { // no ? given, i.e. no params => only one element in list
@@ -48,13 +45,14 @@ UrlParser.prototype.parse=function(){
 		}
 		console.log("DEBUG: paramstr = ",paramstr)
 		
-		//console.log("TODO: 'STABILITY (avoid errors, handle incomplete input)'")
-		//console.log("TODO: what happens with urls without format e.g. /public/test")
 		this.id     = fileWithSuffix.split(".")[0]
 		this.format = fileWithSuffix.split(".")[1]
+		// when format is not given
+		if (this.format == "undefined" || this.format == null) {
+			this.format = "html"
+		}
 	
-		// we extract all the key-value pairs of the parameters 
-		// into the dict this.params={}
+		// extract key-value pairs of the parameters into the dict params={}
 		params={}
 		// for e.g. paramstr = 'lan=en&perpage=5'
 		paramstr && paramstr.split("&").forEach( function(keyval){
@@ -64,7 +62,7 @@ UrlParser.prototype.parse=function(){
 			k=keyvals[0]
 			v=keyvals[1]
 			console.log("DEBUG: params=",params)
-			params[k]=v // we are inside a closure and cannot access this.params
+			params[k]=v // inside a closure - cannot access this.params
 		})
 		this.params=params
 	} else {
@@ -74,15 +72,16 @@ UrlParser.prototype.parse=function(){
 		this.format   = "html"
 	}
 
+	// set type of content to image if it's not text (which is set in the beginning)
 	if(	!(this.format=="html") && 
 		!(this.format == "css") && 
 		!(this.format == "js")){
 		this.content = "image"
 	}
 
-	this.path = this.resource + "/" + this.id + "." + this.format
+	// console output
+	this.path = this.resource + "/" + this.id + "." + this.format // build path string
 	console.log("\nINFO parsing completed '"+this.url+"'")
-	// TODO
 	console.log("INFO path      = '"+this.path+"'")
 	console.log("INFO resource  = '"+this.resource+"'")
 	console.log("INFO id        = '"+this.id+"'")

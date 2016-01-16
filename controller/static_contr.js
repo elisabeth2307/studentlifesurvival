@@ -1,9 +1,8 @@
 "use strict"
 var fs = require('fs');
-var RecipeView = require("../view/recipe_view.js")
-var RecipeManager = require("../model/recipe_mgmt.js")
 var Recipe = require("../model/recipe_model.js")
-var template = "./public/template.html"
+var config = require("../config.js")
+var template = config.htmltemplate
 
 var StaticController=function(parsedurlinfo, req, res){
 	this.parsedurlinfo=parsedurlinfo
@@ -33,6 +32,7 @@ StaticController.prototype.handle=function () {
 				res.end("ERROR static controller - loading file");
 			}else{ 
 				res.writeHead(200, {'content-type':''+content+'/'+format});
+				// html data to string
 				var utf8data = data.toString('UTF-8')
 
 				// handling images
@@ -48,14 +48,16 @@ StaticController.prototype.handle=function () {
 							res.writeHead(200, {'content-type':'text/plain'});
 							res.end("ERROR static controller - loading template");
 						} else {
+							// html template data to string
 							var result = tempdata.toString()
 
-							// you have to do this here because of the htmldata (utf8data)
+							// if id is cooking (site with dynamic content) also call crud-controller
 							if(id == "cooking"){
 								var crudContr = require("./crud_contr.js")
 								var crudController = new crudContr.CrudController(parsedurlinfo, req, res)
-								crudController.setHtmlData(result, utf8data)
+								crudController.setHtmlData(result, utf8data) // set data for crud controller
 								crudController.handle()
+								// response is in view/recipe_view.js
 							} else {
 								// replace the pattern in the template with the data from the requested file
 								result = result.replace(/{CONTENT}/g, utf8data)
@@ -68,6 +70,7 @@ StaticController.prototype.handle=function () {
 				else {
 					res.end(utf8data)
 				}
+				// might appear later because of asynchronus operations
 				console.log("---------------------------------------------------------------")
 			}
 	})

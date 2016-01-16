@@ -11,9 +11,9 @@ startup = function(){
 		urlparser = new urlp.UrlParser(req);
 		console.log("Parser Controller: " + urlparser.controller);
 		console.log("INFO: requested method: " + req.method)
-		console.log("INFO: requested url: '" + req.url+"'")
-		// TODO: add more controllers, e.g. to manage users: add/delete/login/...
+		console.log("INFO: requested url: " + req.url)
 		
+		// call controller depending on method and id
 		if(urlparser.controller == "static" && req.method == "GET") {
 			handlerController = new staticcontr.StaticController(urlparser, req, res)		
 		} 
@@ -33,9 +33,9 @@ startup = function(){
 			handlerController = new staticcontr.StaticController(urlparser, req, res)		
 		}
 
-		handlerController.handle();	
+		handlerController.handle();	// controller starts doing something
 	});
-	serv.listen(config.serverPort);
+	serv.listen(config.serverPort); // define to which port server should listen
 }
 
 module.exports.startup = startup

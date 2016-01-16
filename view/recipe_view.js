@@ -1,4 +1,5 @@
 "use strict"
+var Recipe = require("../model/recipe_model.js")
 
 var RecipeView = function(parsedurlinfo, res ){
 	this.parsedurlinfo = parsedurlinfo
@@ -17,15 +18,14 @@ RecipeView.prototype.formatHtml = function(data, htmlTemplate, headerData) {
 	for(var recipe in data){
 		recipe = JSON.parse(data[recipe])
 
-		// for overview of recipes
-		recList += "><a href = #" + recipe.id + ">" + recipe.id + "</a><br>"
+		// new recipe via model
+		var tmpRec = new Recipe(recipe.id, recipe.description, recipe.imgsrc)
 
-		// recipes with all information
-		recipes += "<h3><a name = " + recipe.id + ">" + recipe.id + "</a></h3>"
-		recipes += "<p>" + recipe.description + "</p>"
-		recipes += "<img src = \"" + recipe.imgsrc + "\" class = \"center\">"
-		recipes += "<a href=\"updateRecipe.html?id="+recipe.id+"\">Update Recipe "+recipe.id+"</a><br>"
-		recipes += "<a href=\"deleteRecipe.html?id="+recipe.id+"\">Delete Recipe "+recipe.id+"</a>"
+		// for overview of recipes 
+		recList += tmpRec.toLink()
+
+		// recipe with all information
+		recipes += tmpRec.toHTML()
 	}
 
 	recList += "</ul><br><br>"
@@ -44,8 +44,8 @@ RecipeView.prototype.formatHtml = function(data, htmlTemplate, headerData) {
 RecipeView.prototype.formatEmpty = function(htmlTemplate, headerData) {
 	// parse the html temple to string and replace the pattern with a message
 	var result = htmlTemplate.toString()
-	result = result.replace(/{CONTENT}/g, "<h3>No recipies available!</h3><p>You can insert recipes if you are logged in.</p> " +
-		"<p>Help the poor students to avoid dying because of hunger!</p>")
+	result = result.replace(/{CONTENT}/g, "<h2>No recipies available!</h2><p class=\"textCenter\">You can insert recipes if you are logged in.</p> " +
+		"<p class=\"textCenter\">Help the poor students to avoid dying because of hunger!</p><img src=\"../images/cooking.jpg\" class=\"center\">")
 
 	// send replaced html template
 	this.res.writeHead(200, {'Content-Type': 'text/html'} );

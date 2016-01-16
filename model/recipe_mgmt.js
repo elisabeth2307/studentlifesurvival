@@ -3,7 +3,7 @@ var fs = require("fs")
 var redis = require("redis")
 var config = require('../config.js')
 var db = redis.createClient(config.redisPort, config.server)
-var filename = "./data/recipes.db"
+var filename = config.recipeFile
 
 var RecipeManager = function(view, res, parsedurlinfo){
 	this.recView = view
@@ -19,7 +19,9 @@ RecipeManager.prototype.filling = function(){
     if (err) {
       console.log(err)
     } else {
+      // is empty!
       if (data == 0) {
+        // read recipes from file
         fs.readFile(filename, function(error, recipes){
           if (error) {
             console.log(error)
@@ -30,7 +32,6 @@ RecipeManager.prototype.filling = function(){
             // loop which inserts data into database
             for(var i = 1; i <= length; i++) {
               var tmpRecipe = recipes[i]
-              //console.log(tmpRecipe)
 
               // store recipes into hash "recipes"
               db.hset("recipes", tmpRecipe.id, JSON.stringify(tmpRecipe), function(errorSet, answer){
@@ -49,7 +50,6 @@ RecipeManager.prototype.filling = function(){
 
 // READ RECIPES -----------------------------------------------------------------------------------
 RecipeManager.prototype.getAll = function(htmlData, headerData){
- 	
   var listRecipe = []
  	var recView = this.recView
 
@@ -58,11 +58,11 @@ RecipeManager.prototype.getAll = function(htmlData, headerData){
     if (err) {
       console.log(err)
     } else {
-      console.log(data)
 
-      if(data.length == 0) {
+      // if no recipes were found
+      if(data == null) {
         recView.formatEmpty(htmlData, headerData)
-      } else {
+      } else { // recipes were found
         recView.formatHtml(data, htmlData, headerData)
       }
     }
@@ -72,18 +72,22 @@ RecipeManager.prototype.getAll = function(htmlData, headerData){
 
 // DELETE UPDATE -----------------------------------------------------------------------------------
 RecipeManager.prototype.update = function(paramData, id){
-	
-  var data = {}
-	var keyvals, k, v
+	var recManager = this
 
-	// get needed data as key-value pairs (stolen from mr feiner)
-	paramData && paramData.split("&").forEach( function(keyval){
-		keyvals = keyval.split("=")
-		k=keyvals[0]
-		v=keyvals[1]
-		data[k]=v // this.data isn't possible at this point
-	})
-	this.data = data
+  // check if recipe already in database
+  db.hget("recipes", id, function(err, data){
+    if (err){
+      console.log(err)
+    } else {
+      // if recipe is in database
+      if (data) {
+        console.log("INFO: recipe found in database - start updating")
+        recManager.insert(paramData)
+      } else { // if recipe is not in database
+        console.log("INFO: recipe not in database - no update possible")
+      }
+    }
+  })
 
 }
 
@@ -102,6 +106,15 @@ RecipeManager.prototype.insert = function(paramData){
 	})
 	this.data = data
 
+  // check image path 
+  if(data.imgsrc.substring(0, 14) != "/public/images") {
+    console.log("INFO: Image-path incomplete")
+    data.imgsrc = "/public/images/"+data.imgsrc
+  } else {
+    console.log("INFO: Image-path complete")
+  }
+
+  // store new recipe in database
   db.hset("recipes", data.id, JSON.stringify(data), function(err, data){
     if (err) {
       console.log(err)
@@ -113,6 +126,7 @@ RecipeManager.prototype.insert = function(paramData){
 // DELETE RECIPE -----------------------------------------------------------------------------------
 RecipeManager.prototype.delete = function(id){
 
+  // delete recipe via id
   db.hdel("recipes", id, function(err, data){
     if (err) {
       console.log(err)
