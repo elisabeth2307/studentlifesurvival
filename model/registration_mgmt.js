@@ -48,7 +48,6 @@ RegisManager.prototype.filling = function(){
       }
     }
   })
-
 }
 
 // INSERT USER -----------------------------------------------------------------------------------
@@ -61,9 +60,10 @@ RegisManager.prototype.insert = function(paramData){
   }
   var token = exports.createToken()
   
-  
+
   var data = {}
 	var keyvals, k, v
+  var mailer = this.mailer
 
 	// get needed data as key-value pairs (stolen from mr feiner)
 	paramData && paramData.split("&").forEach(function(keyval) {
@@ -79,31 +79,42 @@ RegisManager.prototype.insert = function(paramData){
   this.data.valid = false
   this.data.token = token
 
+  var tmpdata = this
+
   //check if user exists
-  if (db.hget (data.id)) {
-    console.log("user already exists")
-  }
-
-  //send email to given adress
-  console.log("\nCALLING MAILER\n")
-  this.mailer.sendMail(data.email, data.token)
-
-
-  db.hset("users", data.id, JSON.stringify(data), function(err, data){
-    if (err) {
+  db.hget ("users", data.id, function(err, data) {
+    if (err) 
       console.log(err)
-    } 
-  })
+    if (data == null) {
 
+      console.log ("new user")
+      data = tmpdata.data
+
+      
+      //send e mail to given adress
+      console.log("\nsending mail\n")
+      mailer.sendMail(data.email, data.token)
+
+      //write user to database
+      db.hset("users", data.id, JSON.stringify(data), function(err, data){
+        if (err) {
+          console.log(err)
+        } 
+      })
+    } 
+
+    else {
+      console.log("user already exists") //->login->cookie
+    }
+  })
+  
 }
 
 
-// READ USERS -----------------------------------------------------------------------------------
+// READ USER -----------------------------------------------------------------------------------
 RegisManager.prototype.get = function(userid){
   
-  var listUsers = []
-
-  // find all recipes
+   // find user by id
   db.hget(("users", userid), function(err, data){
     if (err) {
       console.log(err)

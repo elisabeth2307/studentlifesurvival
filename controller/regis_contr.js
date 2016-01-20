@@ -34,13 +34,12 @@ RegistrationController.prototype.handle = function() {
 		// replace @
 		paramData = paramData.replace(/%40/g, '@')
 
-		//if user already exists -> login
 		console.log("POST-DATA: ", paramData)
 		regisManager.insert(paramData)
 	});
 
 		res.writeHead(200, {'content-type':'text/plain'});
-		res.end("User inserted\n");
+		res.end("User inserted (?)\n");
 } 
 
 module.exports.RegistrationController = RegistrationController
