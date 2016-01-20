@@ -59,11 +59,10 @@ RegisManager.prototype.insert = function(paramData){
     return buf.toString('hex');
   }
   var token = exports.createToken()
-  
+  var mailer = this.mailer
 
   var data = {}
 	var keyvals, k, v
-  var mailer = this.mailer
 
 	// get needed data as key-value pairs (stolen from mr feiner)
 	paramData && paramData.split("&").forEach(function(keyval) {
@@ -93,7 +92,7 @@ RegisManager.prototype.insert = function(paramData){
       
       //send e mail to given adress
       console.log("\nsending mail\n")
-      mailer.sendMail(data.email, data.token)
+      mailer.sendMail(data.id, data.email, data.token)
 
       //write user to database
       db.hset("users", data.id, JSON.stringify(data), function(err, data){
@@ -127,14 +126,29 @@ RegisManager.prototype.get = function(userid){
 }
 
 
-// DELETE USER -----------------------------------------------------------------------------------
-RegisManager.prototype.delete = function(id){
+// VERIFY USER -----------------------------------------------------------------------------------
+RegisManager.prototype.verifyUser = function(id, token){
 
-  db.hdel("users", id, function(err, data){
+  db.hget("users", id, function(err, data){
     if (err) {
       console.log(err)
     } else {
-      console.log(data)
+      console.log("\n---verifying user---")
+      data = JSON.parse(data)
+
+      var user = {}
+      user.id = data.id
+      user.email = data.email
+      user.valid = 'true'
+
+      if (token == data.token) {
+        console.log("token correct")
+        db.hset("users", user.id, JSON.stringify(user), function(err, data){
+          if (err)
+            console.log(err)
+        })
+      }
+      
     }
   })
 

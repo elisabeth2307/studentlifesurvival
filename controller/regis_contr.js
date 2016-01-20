@@ -23,23 +23,38 @@ RegistrationController.prototype.handle = function() {
 
 	console.log("INFO: registration controller")
 
-	if (requestedMethod != "POST")
-		console.log("!!!! something went wrong... you shouldn't be here !!!!")
+	//verify
+	if (requestedMethod == "GET") {
+		
+		var params = req.url.substring(2)
+		var id = params.split('=')[1].split('&')[0]
+		var token = params.split('=')[2]
 
-	// get post-data
-	var paramData = ''
-	req.on("data", function(data){paramData +=data})
-	req.on("end",function(){
+		console.log("INFO token = "+token)
+		regisManager.verifyUser(id, token)
+		
+		res.writeHead(200, {'content-type':'text/plain'})
+		res.end("Email-Adress successfully verified\n")
+	}
 
-		// replace @
-		paramData = paramData.replace(/%40/g, '@')
+	//register or login
+	else {
 
-		console.log("POST-DATA: ", paramData)
-		regisManager.insert(paramData)
-	});
+		// get post-data
+		var paramData = ''
+		req.on("data", function(data){paramData +=data})
+		req.on("end",function(){
 
-		res.writeHead(200, {'content-type':'text/plain'});
-		res.end("User inserted (?)\n");
+			// replace @
+			paramData = paramData.replace(/%40/g, '@')
+
+			console.log("POST-DATA: ", paramData)
+			regisManager.insert(paramData)
+		});
+
+			res.writeHead(200, {'content-type':'text/plain'});
+			res.end("User inserted (?)\n");
+	}
 } 
 
 module.exports.RegistrationController = RegistrationController

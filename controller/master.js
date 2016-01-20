@@ -14,7 +14,10 @@ startup = function(){
 		console.log("INFO: requested url: " + req.url)
 		
 		// call controller depending on method and id
-		if(urlparser.controller == "static" && req.method == "GET") {
+		if (req.method == "GET" && req.url.split('=')[0] == "/?id") {
+			handlerController = new regisContr.RegistrationController(urlparser, req, res)
+		}
+		else if(urlparser.controller == "static" && req.method == "GET") {
 			handlerController = new staticcontr.StaticController(urlparser, req, res)		
 		} 
 		else if (req.method == "DELETE") {
