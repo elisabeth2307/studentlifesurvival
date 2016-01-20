@@ -9,6 +9,7 @@ Authors: Tabea Halmschlager, Elisabeth Haberl
 - npm start (start nodejs server)
 * redis database will be filled at first time (if database is empty)
 * make sure you are using the latest node-version!
+* for unittesting -> make sure nodeunit is installed
 
 # What's the project about?
 Our service helps students, who live alone on their own for the first

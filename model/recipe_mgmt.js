@@ -106,6 +106,8 @@ RecipeManager.prototype.insert = function(paramData){
 	})
 	this.data = data
 
+  console.log(data)
+
   // check image path 
   if(data.imgsrc.substring(0, 14) != "/public/images") {
     console.log("INFO: Image-path incomplete")

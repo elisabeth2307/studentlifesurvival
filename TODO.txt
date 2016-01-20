@@ -1,5 +1,21 @@
-master.js -> cookies
-model/recipe_model.js benutzen
+#Fragen:
+Persisting data on the Node.js server -> 
+Templating System -> 
+AJAX ->
+ReSTful Routing ->
+User-Input-Validation ->
 
--> ajax (delete und put möglich)
--> html redirect/refresh
+#TODO
+cookies
+update/delete nur wenn logged in?
+updateseite: button für "load description"? -> AJAX
+
+#Already done:
+Coded in JavaScript
+MVC-App
+Support for CRUD operations
+Unit Tests for CRUD operations
+Double Opt-In Registration
+Password-Security
+
+
