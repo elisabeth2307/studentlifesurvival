@@ -1,12 +1,28 @@
 function handleInput(){
+	// fetch variables for post-request
 	var id = document.getElementById("inputTitle").value
 	var description = document.getElementById("inputDescription").value
 	var imgsrc = document.getElementById("inputImgsrc").value
-	var xhttp = new XMLHttpRequest();
 	var data = "id="+id+"&title="+id+"&description="+description+"&imgsrc="+imgsrc+""
 
+	// AJAX-object
+	var xhttp = new XMLHttpRequest();
 	xhttp.open("POST", "cooking.html", true);
-	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+	xhttp.onreadystatechange = function() {
+		// disable button when clicked
+		document.getElementById("inputbutton").disabled = true;
+		
+		if (xhttp.readyState == 4 && xhttp.status == 200) {
+			// insert response-text
+    		document.getElementById("statustext").innerHTML = xhttp.responseText + "\nThank you for your support!";
+    		// delete form-content and infotext
+    		document.getElementById("inputform").innerHTML = ""; 
+    		document.getElementById("infotext").innerHTML = ""; 
+  		}
+  	}
+
+	//xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xhttp.send(data);
 }
 

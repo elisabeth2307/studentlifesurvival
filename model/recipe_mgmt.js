@@ -108,6 +108,11 @@ RecipeManager.prototype.insert = function(paramData){
 
   console.log(data)
 
+  // set default image if no image is given
+  if(data.imgsrc == '') {
+    data.imgsrc = "/public/images/default.jpg"
+  }
+
   // check image path 
   if(data.imgsrc.substring(0, 14) != "/public/images") {
     console.log("INFO: Image-path incomplete")

@@ -1,15 +1,15 @@
 <h2>Insert a new Recipe!</h2>
-				
-<form method=POST action="/" class="input">
+<p id="statustext" class="infotext"></p>	
+<p class="infotext" id="infotext">Please note that each recipe title can only be used once.</p>
+	
+<form class="input" id="inputform">
 	Title: <input class="inputfield" type="text" name="id" id="inputTitle"><br>
 	Description: <textarea class="inputfield" type="text" name="description" id="inputDescription">Insert Description here</textarea><br>
 	Image Source: <input class="inputfield" type="text" name="imgsrc" id="inputImgsrc"><br>
-	<input type="submit" value="Submit" onclick=handleInput()><br>
+	<input type="button" value="Submit" onclick=handleInput() id="inputbutton"><br>
 </form>
 
 <br><br>
 
-<p class = "infotext">Please note that each recipe title can only be used once.</p>
-
-<img src = "../images/cooking.jpg" class="center">
+<img src="../images/cooking.jpg" class="center">
 			

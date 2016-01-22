@@ -1,14 +1,12 @@
-#Fragen:
-Persisting data on the Node.js server -> 
-Templating System -> 
-AJAX ->
-ReSTful Routing ->
-User-Input-Validation ->
-
 #TODO
 cookies
-update/delete nur wenn logged in?
+update/delete nur wenn logged in? -> Heli -> seite sperren wenn nicht eingelogged
+
 updateseite: button für "load description"? -> AJAX
+kein bild vorhanden -> ausblenden
+sinnvoller response text (crud controller)
+ReSTful Routing -> js -> delete -> format als rückgabe JSON -> resource/id
+User-Input-Validation -> ist leer etc evtl am client auch testen, passwort lang genug
 
 #Already done:
 Coded in JavaScript
@@ -17,5 +15,6 @@ Support for CRUD operations
 Unit Tests for CRUD operations
 Double Opt-In Registration
 Password-Security
-
-
+Persisting data on the Node.js server
+Templating System
+AJAX
