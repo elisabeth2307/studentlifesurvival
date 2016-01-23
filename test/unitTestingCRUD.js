@@ -46,16 +46,16 @@ module.exports = {
 		var recipeName = this.recipeName
 
 		// send a post request for inserting a new recipe
-		request.post(url).send(data).end(function(err,response){
+		request.post(this.servPort+"/public/content/recipes/"+recipeName+".txt").send(data).end(function(err,response){
 			if(err){
 				console.log(err)
 			} else {
 				// console output
-				console.log("Request text: "+response.text)
+				console.log("Response text: "+response.text)
 				console.log("Response-status: "+response.status)
 
 				// controll text
-				test.equals(response.text, "Insert task done!\n")
+				test.equals(response.text, "Task was successful!")
 
 				// call cooking.html for making sure it is really on the website
 				request.get(url).send().end(function(err, response){
@@ -83,13 +83,13 @@ module.exports = {
 		var recipeName = this.recipeName
 
 		// send update request
-		request.put(this.servPort+"/"+recipeName+"").send(dataUpdate).end(function(error, resp){
+		request.put(this.servPort+"/public/content/recipes/"+recipeName+".txt").send(dataUpdate).end(function(error, resp){
 			if (error){
 				console.log(error)
 			} else {
 				// console output and test the response-text
 				console.log(resp.text)
-				test.equals("Update task done!\n", resp.text)
+				test.equals("Task was successful!", resp.text)
 
 				// retrieve data again to be sure is has been updated
 				request.get(url).send().end(function(errorGet, responseGet){
@@ -115,14 +115,14 @@ module.exports = {
 		var recipeName = this.recipeName
 
 		// send delete request
-		this.request.delete(this.servPort+"/"+recipeName).send().end(function(err, response){
+		this.request.delete(this.servPort+"/public/content/recipes/"+recipeName+".txt").send().end(function(err, response){
 			if (err) {
 				console.log(err)
 			} else {
 				console.log(response.text)
 
 				// test
-				test.equals("Delete task of id \""+recipeName+"\" done!\n", response.text)
+				test.equals("Recipe "+recipeName+" deleted.", response.text)
 				test.done()
 			}
 		})

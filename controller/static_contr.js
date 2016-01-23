@@ -26,11 +26,24 @@ StaticController.prototype.handle=function () {
 
 	// load the file itself
 	fs.readFile(filename, function(err, data){
-			if (err){ // throw	err;
-				console.log(err)		
-				res.writeHead(200, {'content-type':'text/plain'});
-				res.end("ERROR static controller - loading file");
-			}else{ 
+			if (err){
+				console.log(err)	
+
+				// handle file not found
+				fs.readFile("public/images/404.jpg", function(error, img){
+					if (error) {
+						console.log(error)
+						res.writeHead(400, {'content-type':'text/plain'});
+						res.end("404 - source not found!");
+					} else {
+						res.writeHead(200, {'content-type':'image/jpg'});
+						res.end(img, 'binary')
+					}
+				})	
+			} 
+			// file was found
+			else{ 
+				// write head
 				res.writeHead(200, {'content-type':''+content+'/'+format});
 				// html data to string
 				var utf8data = data.toString('UTF-8')

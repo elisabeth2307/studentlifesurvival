@@ -13,88 +13,115 @@ var RecipeManager = function(view, res, parsedurlinfo){
 
 // INITIAL FILLING --------------------------------------------------------------------------------
 RecipeManager.prototype.filling = function(){
-  
-  // check if the database is empty -> if empty -> fill initial data from file
-  db.hlen("recipes", function(err, data){
-    if (err) {
-      console.log(err)
-    } else {
-      // is empty!
-      if (data == 0) {
-        // read recipes from file
-        fs.readFile(filename, function(error, recipes){
-          if (error) {
-            console.log(error)
-          } else {
-            var recipes = JSON.parse(recipes)
-            var length = Object.keys(recipes).length
+    
+    // check if the database is empty -> if empty -> fill initial data from file
+    db.hlen("recipes", function(err, data){
+        if (err) {
+            console.log(err)
+        } else {
+            // is empty!
+            if (data == 0) {
 
-            // loop which inserts data into database
-            for(var i = 1; i <= length; i++) {
-              var tmpRecipe = recipes[i]
+                // read recipes from file
+                fs.readFile(filename, function(error, recipes){
+                    if (error) {
+                        console.log(error)
+                    } else {
+                        var recipes = JSON.parse(recipes)
+                        var length = Object.keys(recipes).length
 
-              // store recipes into hash "recipes"
-              db.hset("recipes", tmpRecipe.id, JSON.stringify(tmpRecipe), function(errorSet, answer){
-                if (errorSet) {
-                  console.log(errorSet)
-                }
-              })
+                        // loop which inserts data into database
+                        for(var i = 1; i <= length; i++) {
+                            var tmpRecipe = recipes[i]
+
+                            // store recipes into hash "recipes"
+                            db.hset("recipes", tmpRecipe.id, JSON.stringify(tmpRecipe), function(errorSet, answer){
+                                if (errorSet) {
+                                    console.log(errorSet)
+                                }
+                            })
+
+                        }
+                        console.log("INFO: inital filling: "+length+" recipes inserted.")
+
+                    }
+                })
+
             }
-          }
-        })
-      }
-    }
-  })
+        }
+    })
 
 }
 
 // READ RECIPES -----------------------------------------------------------------------------------
 RecipeManager.prototype.getAll = function(htmlData, headerData){
-  var listRecipe = []
+    var listRecipe = []
  	var recView = this.recView
 
  	// find all recipes
-  db.hgetall("recipes", function(err, data){
-    if (err) {
-      console.log(err)
-    } else {
+    db.hgetall("recipes", function(err, data){
+        if (err) {
+            console.log(err)
+        } else {
 
-      // if no recipes were found
-      if(data == null) {
-        recView.formatEmpty(htmlData, headerData)
-      } else { // recipes were found
-        recView.formatHtml(data, htmlData, headerData)
-      }
-    }
-  })
+            // if no recipes were found
+            if(data == null) {
+                recView.formatEmpty(htmlData, headerData) // call view -> format empty html site
+            } else { // recipes were found
+                recView.formatHtml(data, htmlData, headerData) // call view -> format html site with recipes
+            }
 
+        }
+    })
+
+}
+
+// READ RECIPE ------------------------------------------------------------------------------------
+RecipeManager.prototype.get = function(id, res) {
+	// get specific recipe via id
+	db.hget("recipes", id, function(err, data){
+		if (err){
+			console.log(err)
+			res.writeHead(500, {'content-type':'text-plain'})
+			res.end("Sorry, something went wrong.")
+		} else {
+			// send back recipe as text
+			res.writeHead(200, {'content-type':'text/plain'});
+			res.end(data)
+		}
+	})
 }
 
 // DELETE UPDATE -----------------------------------------------------------------------------------
-RecipeManager.prototype.update = function(paramData, id){
+RecipeManager.prototype.update = function(paramData, id, res){
 	var recManager = this
 
-  // check if recipe already in database
-  db.hget("recipes", id, function(err, data){
-    if (err){
-      console.log(err)
-    } else {
-      // if recipe is in database
-      if (data) {
-        console.log("INFO: recipe found in database - start updating")
-        recManager.insert(paramData)
-      } else { // if recipe is not in database
-        console.log("INFO: recipe not in database - no update possible")
-      }
-    }
-  })
+    // check if recipe already in database
+    db.hget("recipes", id, function(err, data){
+        if (err){
+            console.log(err)
+            res.writeHead(500, {'content-type':'text-plain'})
+            res.end("Sorry, something went wrong.")
+        } 
+        else {
+            // if recipe is in database
+            if (data) {
+                console.log("INFO: recipe found in database - start updating")
+                recManager.insert(paramData, res) // call insert (update is same operation as insert)
+            } 
+            else { // recipe is not in database
+                console.log("INFO: recipe not in database - no update possible")
 
+                res.writeHead(400, {'content-type':'text-plain'})
+                res.end("Requested recipe is not in database")
+            }
+        }
+    })
 }
 
 // INSERT RECIPE -----------------------------------------------------------------------------------
-RecipeManager.prototype.insert = function(paramData){
-	
-  var data = {}
+RecipeManager.prototype.insert = function(paramData, res){
+	var data = {}
 	var keyvals, k, v
 
 	// get needed data as key-value pairs (stolen from mr feiner)
@@ -106,41 +133,54 @@ RecipeManager.prototype.insert = function(paramData){
 	})
 	this.data = data
 
-  console.log(data)
+    // set default image if no image is given
+    if(data.imgsrc == '') {
+        data.imgsrc = "/public/images/default.jpg"
+    }
 
-  // set default image if no image is given
-  if(data.imgsrc == '') {
-    data.imgsrc = "/public/images/default.jpg"
-  }
+    // check image path 
+    if(data.imgsrc.substring(0, 14) != "/public/images") {
+        console.log("INFO: Image-path incomplete")
+        data.imgsrc = "/public/images/"+data.imgsrc
+    } else {
+        console.log("INFO: Image-path complete")
+    }
 
-  // check image path 
-  if(data.imgsrc.substring(0, 14) != "/public/images") {
-    console.log("INFO: Image-path incomplete")
-    data.imgsrc = "/public/images/"+data.imgsrc
-  } else {
-    console.log("INFO: Image-path complete")
-  }
-
-  // store new recipe in database
-  db.hset("recipes", data.id, JSON.stringify(data), function(err, data){
-    if (err) {
-      console.log(err)
-    } 
-  })
-
+    // input validation
+    if(data.id == "" || data.description == ""){
+    	res.writeHead(400, {'content-type':'text/plain'})
+    	res.end("Title or description missing")
+    } else {
+		// store new recipe in database
+		db.hset("recipes", data.id, JSON.stringify(data), function(err, data){
+	        if (err) {
+	       		console.log(err)
+	       		res.writeHead(500, {'content-type':'text/plain'})
+	       		res.end("Sorry, something went wrong.");
+	       	} else {
+	       		res.writeHead(200, {'content-type':'text/plain'});
+				res.end("Task was successful!");
+	       	}
+		})
+	}
 }
 
 // DELETE RECIPE -----------------------------------------------------------------------------------
-RecipeManager.prototype.delete = function(id){
+RecipeManager.prototype.delete = function(id, res){
 
-  // delete recipe via id
-  db.hdel("recipes", id, function(err, data){
-    if (err) {
-      console.log(err)
-    } else {
-      console.log(data)
-    }
-  })
+    // delete recipe via id
+    db.hdel("recipes", id, function(err, data){
+        if (err) {
+            console.log(err)
+            res.writeHead(500, {'content-type':'text/plain'});
+            res.end("Deleting not successful - please try again.")
+        } else {
+        	console.log("Recipe "+id+" deleted.")
+
+			res.writeHead(200, {'content-type':'text/plain'});
+			res.end("Recipe "+id+" deleted.");
+        }
+    })
 
 }
 

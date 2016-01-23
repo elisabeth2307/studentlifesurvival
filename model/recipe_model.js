@@ -6,7 +6,7 @@ var Recipe = function(id,description, imgsrc){
 
 // return formatted link for cooking.html
 Recipe.prototype.toLink = function(){
-	return "><a href = #" + this.id + ">" + this.id + "</a><br>"
+	return "-><a href=#" + this.id + ">" + this.id + "</a><br>"
 }
 
 // return formatted recipe for cooking.html
@@ -17,7 +17,7 @@ Recipe.prototype.toHTML = function(){
 	recipes += "<p>" + this.description + "</p>"
 	recipes += "<img src = \"" + this.imgsrc + "\" class = \"center\">"
 	recipes += "<a class=\"centerlink\" href=\"updateRecipe.html?id="+this.id+"\"><button>Update "+this.id+"</button></a>"
-	recipes += "<a class=\"centerlink\" href=\"/\"><button onclick=\"handleDelete('"+this.id+"')\">Delete "+this.id+"</button></a>"
+	recipes += "<a class=\"centerlink\" href=\"deleteRecipe.html?id="+this.id+"\"><button>Delete "+this.id+"</button></a>"
 
 	return recipes
 }

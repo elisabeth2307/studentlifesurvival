@@ -1,0 +1,19 @@
+<script>
+	// function has to be here -> not able to put it into file
+	window.onload = function(){
+
+		var url = window.location.href
+		var result = url.substring(url.search("id=")+3)
+
+		// update headline -> add title of recipe
+		document.getElementById("deleteHeadline").innerHTML = document.getElementById("deleteHeadline").innerHTML + result + "?"
+
+	}
+</script>
+
+<h2 id="deleteHeadline">Are you sure you want to delete recipe: </h2>
+
+<p id="deleteText" class="infotextleft"><input id="deleteButton" type="button" value="Yes," onclick=handleDelete()> I want to delete it!</p><br>
+
+<img src = "../images/cooking.jpg" class="center">
+			

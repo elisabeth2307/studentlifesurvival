@@ -15,6 +15,7 @@ var CrudController = function(parsedurlinfo, req, res){
 CrudController.prototype.handle = function() {
 	var recipeManager = this.recipeManager
 	var id = this.parsedurlinfo.id
+	var resource = this.parsedurlinfo.resource
 	var requestedMethod = this.req.method
 	var res = this.res
 	var req = this.req
@@ -24,16 +25,23 @@ CrudController.prototype.handle = function() {
 
 	// GET --------------------------------------------------------------
 	if (requestedMethod == "GET") {
-		console.log("INFO: getting all recipes")
-		recipeManager.getAll(htmlData, headerData) // call manager (database access needed)
+		// one specific recipe is requested
+		if (resource == "public/content/recipe"){
+			console.log("INFO: getting recipe: "+id)
+			recipeManager.get(id, res) // call manager (database access needed)
+		} 
+		// all recipes are requested
+		else {
+			console.log("INFO: getting all recipes")
+			recipeManager.getAll(htmlData, headerData) // call manager (database access needed)
+		}
 	}
 	// DELETE --------------------------------------------------------------
 	else if (requestedMethod == "DELETE") {
 		console.log("INFO: deleting entry with id: "+id)
-		recipeManager.delete(id) // call manager and delete from database
 
-		res.writeHead(200, {'content-type':'text/plain'});
-		res.end("Delete task of id \""+id+"\" done!\n");
+		// call manager and delete from database
+		recipeManager.delete(id, res)
 	} 
 	// POST --------------------------------------------------------------
 	else if (requestedMethod == "POST") {
@@ -51,12 +59,9 @@ CrudController.prototype.handle = function() {
 				paramData = paramData.replace(/%2F/g, '/')
 
 				console.log("POST-DATA: ", paramData)
-				recipeManager.insert(paramData) // call manager and insert into database
+				recipeManager.insert(paramData, res) // call manager and insert into database
 			} 
 		);
-
-		res.writeHead(200, {'content-type':'text/plain'});
-		res.end("Insert task done!\n");
 	} 
 	// PUT --------------------------------------------------------------
 	else if (requestedMethod == "PUT") {
@@ -71,12 +76,9 @@ CrudController.prototype.handle = function() {
 				paramData = paramData.replace(/%20/g, ' ')
 
 				console.log("POST-DATA: ", paramData)
-				recipeManager.update(paramData, id) // call manager and update in database
+				recipeManager.update(paramData, id, res) // call manager and update in database
 			} 
 		);
-
-		res.writeHead(200, {'content-type':'text/plain'});
-		res.end("Update task done!\n");
 	}
 }
 

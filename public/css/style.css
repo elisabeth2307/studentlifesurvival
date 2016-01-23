@@ -118,7 +118,8 @@ p {
 		margin-left: auto;
 		margin-right: auto;
 		height: 250px;
-		margin-bottom: 20px;
+		margin-bottom: 50px;
+		margin-top: 50px;
 		text-align:center;
 }
 
@@ -173,4 +174,12 @@ textarea {
 		margin-left: auto;
 		margin-right: auto;
 		text-align:center;
+}
+
+.infotextleft {
+	font-size: 14pt;
+	padding-bottom:auto;
+	text-align: left;
+	padding: 0;
+	margin: 0;
 }

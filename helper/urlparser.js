@@ -79,6 +79,11 @@ UrlParser.prototype.parse=function(){
 		this.content = "image"
 	}
 
+	// handle index (because it's not in folder content)
+	if (this.id == "index"){
+		this.resource = "public"
+	}
+
 	// console output
 	this.path = this.resource + "/" + this.id + "." + this.format // build path string
 	console.log("\nINFO parsing completed '"+this.url+"'")

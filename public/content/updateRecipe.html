@@ -1,20 +1,25 @@
 <script>
+	// function has to be here -> not able to put it into file
 	window.onload = function(){
 
 		var url = window.location.href
 		var result = url.substring(url.search("id=")+3)
 
+		// update headline -> add title of recipe
 		document.getElementById("updateHeadline").innerHTML = document.getElementById("updateHeadline").innerHTML + result
-
 	}
 </script>
 
 <h2 id="updateHeadline">Update recipe: </h2>
-				
-<form method=POST action="/" class="input">
-	Description: <textarea class="inputfield" type="text" name="description" id="updateDescription">Update here</textarea><br>
-	Image Source: <input class="inputfield" type="text" name="imgsrc" id="updateImgsrc"><br>
-	<input type="submit" value="Submit" onclick=handleUpdate()><br>
+<p id="statustext" class="infotextleft"></p>		
+
+<form class="input" id="inputform">
+	Description: 
+	<textarea class="inputfield" type="text" name="description" id="updateDescription">Insert new description here...</textarea><br>
+	<input type="button" value="Load description" onclick=loadDescription()><br>
+	Image Source: 
+	<input class="inputfield" type="text" name="imgsrc" id="updateImgsrc"><br>
+	<input id="updateButton" type="button" value="Submit" onclick=handleUpdate() ><br>
 </form>
 
 
