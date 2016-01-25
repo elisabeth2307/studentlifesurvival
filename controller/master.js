@@ -7,7 +7,8 @@ startup = function(){
 	var regisContr = require("./regis_contr.js")
 
 	var serv = http.createServer(function(req, res) {
-		// TODO addCookie(req,res)
+
+		// urlparser parses request + console output
 		urlparser = new urlp.UrlParser(req);
 		console.log("Parser Controller: " + urlparser.controller);
 		console.log("INFO: requested method: " + req.method)

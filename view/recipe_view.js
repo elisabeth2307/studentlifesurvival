@@ -9,7 +9,7 @@ var RecipeView = function(parsedurlinfo, res ){
 // function which is called when recipes were found in database
 RecipeView.prototype.formatHtml = function(data, htmlTemplate, headerData) {
 	var result = htmlTemplate.toString()
-	var recList = "<ul>" // recipe list in the beginning of the site for a better overview
+	var recList = "<h3>Jump directly to a recipe</h3><ul>" // recipe list in the beginning of the site for a better overview
 	var recipes = ""
 	var content = ""
 

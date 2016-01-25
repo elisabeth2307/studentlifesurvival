@@ -99,11 +99,16 @@ h2 {		font-size: 2em;
 		}
 		
 p {
-		font-family: Geneva, Arial, Verdana, sans-serif;
+		font-family: Verdana, Geneva, Arial, sans-serif;
 		font-size:0.9em;
 		line-height: 1.5;
 		padding-bottom: 2%;
 		}
+
+h3 {
+		font-family: Verdana, Geneva, Arial, sans-serif;
+
+}
 		
 .header-image {   
 		text-align:center;

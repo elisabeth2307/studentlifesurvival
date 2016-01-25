@@ -6,14 +6,14 @@ var Recipe = function(id,description, imgsrc){
 
 // return formatted link for cooking.html
 Recipe.prototype.toLink = function(){
-	return "-><a href=#" + this.id + ">" + this.id + "</a><br>"
+	return "<li><a href=#" + this.id + ">" + this.id + "</a></li>"
 }
 
 // return formatted recipe for cooking.html
 Recipe.prototype.toHTML = function(){
 	var recipes = ""
 
-	recipes += "<h3><a name = " + this.id + ">" + this.id + "</a></h3>"
+	recipes += "<hr><h3><a name = " + this.id + ">" + this.id + "</a></h3>"
 	recipes += "<p>" + this.description + "</p>"
 	recipes += "<img src = \"" + this.imgsrc + "\" class = \"center\">"
 	recipes += "<a class=\"centerlink\" href=\"updateRecipe.html?id="+this.id+"\"><button>Update "+this.id+"</button></a>"
