@@ -1,8 +1,8 @@
 #TODO
 cookies
 update/delete nur wenn logged in? -> Heli -> seite sperren wenn nicht eingelogged
-
 User-Input-Validation -> ist leer etc evtl am client auch testen, passwort lang genug
+restful routing -> user
 
 #Already done:
 Coded in JavaScript

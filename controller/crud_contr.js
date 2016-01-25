@@ -43,10 +43,9 @@ CrudController.prototype.handle = function() {
 		// call manager and delete from database
 		recipeManager.delete(id, res)
 	} 
-	// POST --------------------------------------------------------------
-	else if (requestedMethod == "POST") {
-		console.log("INFO: inserting new recipe")
-
+	// POST or PUT -------------------------------------------------------------
+	else if (requestedMethod == "POST" || requestedMethod == "PUT") {
+		
 		// get post-data from request (source: mr feiner)
 		var paramData = ''
 		req.on("data", function(data){paramData +=data})
@@ -59,27 +58,18 @@ CrudController.prototype.handle = function() {
 				paramData = paramData.replace(/%2F/g, '/')
 
 				console.log("POST-DATA: ", paramData)
-				recipeManager.insert(paramData, res) // call manager and insert into database
+
+				if(requestedMethod == "POST") {
+					console.log("INFO: inserting new recipe")
+					recipeManager.insert(paramData, res) // call manager and insert into database
+				} else {
+					console.log("INFO: updating recipe")
+					recipeManager.update(paramData, id, res) // call manager and update in database
+				}
+				
 			} 
-		);
+		)
 	} 
-	// PUT --------------------------------------------------------------
-	else if (requestedMethod == "PUT") {
-		console.log("INFO: updating recipe")
-		
-		// get post-data from request (source: mr feiner)
-		var paramData = ''
-		req.on("data", function(data){paramData +=data})
-			req.on("end",function(){
-
-				// replace with space
-				paramData = paramData.replace(/%20/g, ' ')
-
-				console.log("POST-DATA: ", paramData)
-				recipeManager.update(paramData, id, res) // call manager and update in database
-			} 
-		);
-	}
 }
 
 // needed for site cooking

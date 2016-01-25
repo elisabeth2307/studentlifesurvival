@@ -17,21 +17,23 @@ var insert = request.post(servPort+'/public/content/recipes/'+recipeName+'.txt')
 		console.log("Response-text: "+response.text)
 
 		// check
-		assert.ok(response.text, "Insert task done!\n")
+		assert.ok(response.text == "Task was successful!", "Expected: Task was successful!")
 	}
 })
 
+// this test causes problems because of asynchronus calls (update is sent before delete but delete is faster -> update sets
+// recipe again after it's deleted)
 // UPDATE REQUEST -------------------------------------------------------------------------------------
-var update = request.put(servPort+'/public/content/recipes/'+recipeName+'.txt').send(dataUpdate).end(function(err,response){
+/*var update = request.put(servPort+'/public/content/recipes/'+recipeName+'.txt').send(dataUpdate).end(function(err,response){
 	if(err){
 		console.log(err)
 	} else {
 		console.log("Response-text: "+response.text)
 
 		// check
-		assert.ok(response.text == "Task was successful!")
+		assert.ok(response.text == "Task was successful!", "Expected: Task was successful!")
 	}
-})
+})*/
 
 // INSERT REQUEST -------------------------------------------------------------------------------------
 var insert = request.post(servPort+'/public/content/recipes/'+recipeName2+'.txt').send(dataInsert2).end(function(err,response){
@@ -41,7 +43,7 @@ var insert = request.post(servPort+'/public/content/recipes/'+recipeName2+'.txt'
 		console.log("Response-text: "+response.text)
 
 		// check
-		assert.ok(response.text, "Task was successful!")
+		assert.ok(response.text, "Task was successful!", "Expected: Task was successful!")
 	}
 })
 
@@ -53,7 +55,32 @@ var get = request.get(servPort).send().end(function(err,resp){
 		console.log("response-status: "+resp.status)
 
 		// check
-		assert.ok(200 == resp.status, "we expect status code of 200")
+		assert.ok(200 == resp.status, "Expected: Status-code 200")
+	}
+})
+
+// GET REQUEST -------------------------------------------------------------------------------------
+var get = request.get(servPort+"/cooking.html").send().end(function(err,resp){
+	if(err){
+		console.log(err)
+	} else {
+		console.log("response-status: "+resp.status)
+
+		// check
+		assert.ok(200 == resp.status, "Expected: Status-code 200")
+	}
+})
+
+// GET REQUEST -------------------------------------------------------------------------------------
+var get = request.get(servPort+"/public/content/recipe/"+recipeName+".txt").send().end(function(err,resp){
+	if(err){
+		console.log(err)
+	} else {
+		var result = JSON.parse(resp.text)
+		console.log("response-id: "+result.id)
+
+		// check
+		assert.ok(recipeName == result.id, "Expected: response-id of recipe "+recipeName)
 	}
 })
 
@@ -65,7 +92,7 @@ var del = request.delete(servPort+'/public/content/recipes/'+recipeName2+'.txt')
 		console.log("Response-text: "+response.text)
 
 		// check
-		assert.ok(response.text == "Recipe "+recipeName2+" deleted.")
+		assert.ok(response.text == "Recipe "+recipeName2+" deleted.", "Expected: Recipe "+recipeName2+" deleted.")
 	}
 })
 
@@ -77,6 +104,6 @@ var del = request.delete(servPort+'/public/content/recipes/'+recipeName+'.txt').
 		console.log("Response-text: "+response.text)
 
 		// check
-		assert.ok(response.text == "Recipe "+recipeName+" deleted.")
+		assert.ok(response.text == "Recipe "+recipeName+" deleted.", "Expected: Recipe "+recipeName2+" deleted.")
 	}
 })

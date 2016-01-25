@@ -134,7 +134,7 @@ RecipeManager.prototype.insert = function(paramData, res){
 	this.data = data
 
     // set default image if no image is given
-    if(data.imgsrc == '') {
+    if(data.imgsrc == "" || data.imgsrc == null) {
         data.imgsrc = "/public/images/default.jpg"
     }
 
@@ -147,9 +147,9 @@ RecipeManager.prototype.insert = function(paramData, res){
     }
 
     // input validation
-    if(data.id == "" || data.description == ""){
+    if(data.id == "" || data.description == "" || data.id == null || data.description == null){
     	res.writeHead(400, {'content-type':'text/plain'})
-    	res.end("Title or description missing")
+    	res.end("Title or description missing.")
     } else {
 		// store new recipe in database
 		db.hset("recipes", data.id, JSON.stringify(data), function(err, data){
