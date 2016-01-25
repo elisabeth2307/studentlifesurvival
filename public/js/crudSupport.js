@@ -4,11 +4,18 @@ function handleInput(){
 	var description = document.getElementById("inputDescription").value
 	var imgsrc = document.getElementById("inputImgsrc").value
 	var data = "id="+id+"&title="+id+"&description="+description+"&imgsrc="+imgsrc+""
+    var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,\/{}|\\":<>\?]/); //unacceptable chars
 
 	// if id and description are empty no ajax-request is sent!
 	if(id == "" || description == ""){
 		document.getElementById("statustext").innerHTML = "<b>Fields title and description are mandatory fields!</b>"
-	} else {
+	}
+	// no special chars allowed 
+	else if (pattern.test(id)) {
+		document.getElementById("statustext").innerHTML = "<b>No special chars are allowed!</b>"
+	} 
+	// everything ok -> send AJAX call
+	else {
 		// create AJAX-object and specify method, url and true (asynchronus)
 		var xhttp = new XMLHttpRequest();
 		xhttp.open("POST", "/public/content/recipes/"+id+".txt", true);

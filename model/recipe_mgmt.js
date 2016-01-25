@@ -123,6 +123,7 @@ RecipeManager.prototype.update = function(paramData, id, res){
 RecipeManager.prototype.insert = function(paramData, res){
 	var data = {}
 	var keyvals, k, v
+    var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,\/{}|\\":<>\?]/); //unacceptable chars
 
 	// get needed data as key-value pairs (stolen from mr feiner)
 	paramData && paramData.split("&").forEach(function(keyval) {
@@ -150,6 +151,9 @@ RecipeManager.prototype.insert = function(paramData, res){
     if(data.id == "" || data.description == "" || data.id == null || data.description == null){
     	res.writeHead(400, {'content-type':'text/plain'})
     	res.end("Title or description missing.")
+    } else if (pattern.test(data.id)) {
+        res.writeHead(400, {'content-type':'text/plain'})
+        res.end("Special chars in title - please do not use them...")
     } else {
 		// store new recipe in database
 		db.hset("recipes", data.id, JSON.stringify(data), function(err, data){
