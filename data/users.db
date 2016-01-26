@@ -1,10 +1,12 @@
 {
  "1" : {	"id":"eli",
-			"email":"",
-			"password":"geheim"
+			"email":"elisabethmargarethe.haberl@edu.fh-joanneum.at",
+			"password":"geheim",
+			"valid":"true"
 		},
  "2" : {	"id":"tabea",
  			"email":"tabea.halmschlager@edu.fh-joanneum.at",
- 			"password":"secret"
+ 			"password":"secret",
+ 			"valid":"true"
 		}
 }
