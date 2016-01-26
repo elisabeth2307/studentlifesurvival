@@ -130,7 +130,7 @@ RegisManager.prototype.insert = function(paramData, res){
 // LOGIN -----------------------------------------------------------------------------------
 RegisManager.prototype.login = function(paramData, res, req){
 
-  console.log("LOGIN")
+  console.log("-- LOGIN")
 
   var data = {}
   var keyvals, k, v
@@ -146,7 +146,7 @@ RegisManager.prototype.login = function(paramData, res, req){
   var tmpdata = this
 
   //check if user exists
-  db.hget ("users", data.id, function(err, data) {
+  db.hget ("users", data.id, function(err, dbdata) {
     var tempdata = this
 
     if (err) {
@@ -155,38 +155,44 @@ RegisManager.prototype.login = function(paramData, res, req){
       res.end("Sorry, something went wrong.");
     }
 
-    else if (data == null) {
+    else if (dbdata == null) {
       res.writeHead(400, {'content-type':'text/plain'})
       res.end("Sorry, this username does not exist.<b>Use the register-form or try again.")
     } 
 
     else {
       var userdata = tmpdata.data
-      var dbdata;
+      var dbdata = JSON.parse(dbdata);
 
-      console.log("userpw: " + userdata.password)
+      // check if password is correct
+      if (dbdata.password == userdata.password) {
+        console.log("password not correct")
 
-      //check if password is correct
-      //data = undefined?? ):
+        //set session-cookie
+        var rc = req.headers.cookie
+        var cookiesDict = {}
+        rc && rc.split(';').forEach(function (cookie){
+          var parts = cookie.split('=')
+          if(parts[0])
+            cookiesDict[parts[0] = rc]
+        })
 
+        var respCookies = []
+        var id = Math.floor((Math.random()*9000)+1)
+        if(Object.keys(cookiesDict).length == 0)
+          respCookies.push(new Cookie('studentlife_id', id))
 
-      //set session-cookie
-      var rc = req.headers.cookie
-      var cookiesDict = {}
-      rc && rc.split(';').forEach(function (cookie){
-        var parts = cookie.split('=')
-        if(parts[0])
-          cookiesDict[parts[0] = rc]
-      })
+        res.setHeader("Set-Cookie", respCookies)
+        res.writeHead(200, {'content-type':'text/plain'})
+        res.end("Welcome back, " + userdata.id + "!")
+      } 
+      // password not correct
+      else {
+        console.log("password not correct")
 
-      var respCookies = []
-      var id = Math.floor((Math.random()*9000)+1)
-      if(Object.keys(cookiesDict).length == 0)
-        respCookies.push(new Cookie('studentlife_id', id))
-
-      res.setHeader("Set-Cookie", respCookies)
-      res.writeHead(200, {'content-type':'text/plain'})
-      res.end("Welcome back, " + userdata.id + "!")
+        res.writeHead(200, {'content-type':'text/plain'})
+        res.end("Sorry, wrong password. <b>Use the register-form or try again.")
+      }
     }
   })
 }
