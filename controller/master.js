@@ -7,13 +7,20 @@ startup = function(){
 	var regisContr = require("./regis_contr.js")
 
 	var serv = http.createServer(function(req, res) {
+		var cookieSet = false
+
+		// check if cookie is set -> needed for urlparser
+		if(req.headers.cookie != null && req.headers.cookie.split('=')[0] == "studentlife_id"){
+			cookieSet = true
+		}
 
 		// urlparser parses request + console output
-		urlparser = new urlp.UrlParser(req);
+		urlparser = new urlp.UrlParser(req, cookieSet);
 		console.log("Parser Controller: " + urlparser.controller);
 		console.log("INFO: requested method: " + req.method)
 		console.log("INFO: requested url: " + req.url)
 		
+
 		// call controller depending on method and id
 		// REGISTRATION -------------------------------------------------------------------
 		if (req.method == "GET" && req.url.split('=')[0] == "/?id") {

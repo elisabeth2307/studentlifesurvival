@@ -182,7 +182,7 @@ RegisManager.prototype.login = function(paramData, res, req){
       var respCookies = []
       var id = Math.floor((Math.random()*9000)+1)
       if(Object.keys(cookiesDict).length == 0)
-        respCookies.push(new Cookie('session_id', id))
+        respCookies.push(new Cookie('studentlife_id', id))
 
       res.setHeader("Set-Cookie", respCookies)
       res.writeHead(200, {'content-type':'text/plain'})

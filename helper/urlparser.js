@@ -1,7 +1,7 @@
 "use strict"
 // author: mr feiner and a bit elisabeth haberl
 
-var UrlParser = function(request){
+var UrlParser = function(request, cookieSet){
 	this.req=request
 	this.url=request.url;
 	this.controller="static";
@@ -11,11 +11,11 @@ var UrlParser = function(request){
 	this.id=null;
 	this.format="";
 	this.params={}
+	this.cookieSet=cookieSet
 	
 	this.parse();
 }
 
-// TODO: make this stable, i.e. work with MISSING parts in the url :)
 
 UrlParser.prototype.parse=function(){
 	console.log("\n\n---------------------------------------------------------------")
@@ -79,6 +79,11 @@ UrlParser.prototype.parse=function(){
 		this.content = "image"
 	}
 
+	// if cookie is not set -> just index page or registration will be shown
+	if (this.cookieSet == false && this.format == "html" && this.id != "registration") {
+		this.id = "index"
+	}
+
 	// handle index (because it's not in folder content)
 	if (this.id == "index"){
 		this.resource = "public"
@@ -92,7 +97,8 @@ UrlParser.prototype.parse=function(){
 	console.log("INFO id        = '"+this.id+"'")
 	console.log("INFO format    = '"+this.format+"'")
 	console.log("INFO params    = '"+this.params+"'")
-	console.log("INFO content    = '"+this.content+"'")
+	console.log("INFO content   = '"+this.content+"'")
+	console.log("INFO cookie    = '"+this.cookieSet+"'")
 }
 
 module.exports.UrlParser=UrlParser
