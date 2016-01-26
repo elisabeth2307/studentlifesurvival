@@ -1,8 +1,8 @@
 function handleRegis(){
 	// fetch variables for post-request
-	var id = document.getElementById("id").value
-	var email = document.getElementById("email").value
-	var password = document.getElementById("password").value
+	var id = document.getElementById("idRegister").value
+	var email = document.getElementById("emailRegister").value
+	var password = document.getElementById("passwordRegister").value
 	var data = "id="+id+"&email="+email+"&password="+password+""
 
     console.log("handling Registration")
@@ -43,11 +43,11 @@ function handleRegis(){
 
 function handleLogin(){
 	// fetch variables for post-request
-	var id = document.getElementById("id").value
-	var password = document.getElementById("password").value
+	var id = document.getElementById("idLogin").value
+	var password = document.getElementById("passwordLogin").value
 	var data = "id="+id+"&password="+password+""
 
-    console.log("handling Registration")
+    console.log("handling Login")
 
 	// if id and description are empty no ajax-request is sent!
 	if(id == "" || password == ""){
