@@ -41,12 +41,12 @@ form {
 		background-color: #D8D8D8;
 		}
 
-#register {
+#register, #login {
 		font-size: 0.5em;
-		width: 306px;
+		width: 880px;
+		height: 250px;
 		padding: 20px;
 		margin-left: -10px;
-		background-color: #555555;
 		}
 
 .register {
@@ -93,7 +93,7 @@ section {
 		margin-left: 10px;
 		}
 
-h2 {		font-size: 2em;
+h2 {	font-size: 2em;
 		padding-top: 0.5%;
 		font-family: Verdana, Geneva, Arial, sans-serif;
 		}
@@ -183,6 +183,7 @@ textarea {
 
 .infotextleft {
 	font-size: 14pt;
+	font-weight: normal;
 	padding-bottom:auto;
 	text-align: left;
 	padding: 0;

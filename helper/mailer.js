@@ -16,8 +16,8 @@ Mailer.prototype.sendMail = function(name, email, token){
 	this.transporter.sendMail({
 		from: 'studentlifesurvival@fh-joanneum.at',
 		to: email,
-		subject: 'registration',
-		text: 'Dear '+name+',\nWelcome to StudentlifeSurvival!\nPlease confirm your email adress: http://'+config.server+':'+config.serverPort+'?id='+name+'&token='+token,
+		subject: 'Registration',
+		text: 'Dear '+name+',\n\nWelcome to StudentlifeSurvival!\n\nPlease confirm your email adress: http://'+config.server+':'+config.serverPort+'?id='+name+'&token='+token,
 
 	}, function(err, info) {
 		if (!err) 
