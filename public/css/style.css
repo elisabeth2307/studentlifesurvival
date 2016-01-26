@@ -44,9 +44,9 @@ form {
 #register, #login {
 		font-size: 0.5em;
 		width: 880px;
-		height: 250px;
 		padding: 20px;
 		margin-left: -10px;
+		padding-bottom: 80px;
 		}
 
 .register {

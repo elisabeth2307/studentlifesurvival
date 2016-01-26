@@ -4,7 +4,7 @@ function Cookie(name, v){
 	this.value = v
 	
 	var expireOn = new Date()
-	expireOn.setDate(expireOn.getDate()+3) //in three days
+	expireOn.setDate(expireOn.getDate()+1) //in one day
 
 	this.expires = expireOn.toUTCString()
 }

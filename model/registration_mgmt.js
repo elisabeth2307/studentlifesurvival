@@ -2,6 +2,7 @@
 var fs = require("fs")
 var redis = require("redis")
 var crypto = require("crypto")
+var Cookie = require ("../helper/cookies.js")
 var config = require('../config.js')
 var Mailer = require('../helper/mailer.js')
 var db = redis.createClient(config.redisPort, config.server)
@@ -12,7 +13,6 @@ var RegisManager = function(res, parsedurlinfo){
 	this.parsedurlinfo = parsedurlinfo
 	this.res = res
   this.mailer = new Mailer()
-
 }
 
 // INITIAL FILLING --------------------------------------------------------------------------------
@@ -128,7 +128,7 @@ RegisManager.prototype.insert = function(paramData, res){
 
 
 // LOGIN -----------------------------------------------------------------------------------
-RegisManager.prototype.login = function(paramData, res){
+RegisManager.prototype.login = function(paramData, res, req){
 
   console.log("LOGIN")
 
@@ -167,9 +167,24 @@ RegisManager.prototype.login = function(paramData, res){
       console.log("userpw: " + userdata.password)
 
       //check if password is correct
-      //create cookie
-      //set cookie
-      //?
+      //data = undefined?? ):
+
+
+      //set session-cookie
+      var rc = req.headers.cookie
+      var cookiesDict = {}
+      rc && rc.split(';').forEach(function (cookie){
+        var parts = cookie.split('=')
+        if(parts[0])
+          cookiesDict[parts[0] = rc]
+      })
+
+      var respCookies = []
+      var id = Math.floor((Math.random()*9000)+1)
+      if(Object.keys(cookiesDict).length == 0)
+        respCookies.push(new Cookie('session_id', id))
+
+      res.setHeader("Set-Cookie", respCookies)
       res.writeHead(200, {'content-type':'text/plain'})
       res.end("Welcome back, " + userdata.id + "!")
     }

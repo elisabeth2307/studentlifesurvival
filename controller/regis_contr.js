@@ -50,7 +50,7 @@ RegistrationController.prototype.handle = function() {
 				regisManager.insert(paramData, res)
 			}
 			else {
-				regisManager.login(paramData, res)
+				regisManager.login(paramData, res, req)
 			}
 		});
 
