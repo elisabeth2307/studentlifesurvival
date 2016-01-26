@@ -7,7 +7,7 @@ function handleRegis(){
 
     console.log("handling Registration")
 
-	// if id and description are empty no ajax-request is sent!
+	// if id, email or password are empty no ajax-request is sent!
 	if(id == "" || email == "" || password == ""){
 		document.getElementById("statustext2").innerHTML = "<b>All fields need to be filled in!</b>"
 	}
@@ -23,14 +23,17 @@ function handleRegis(){
 			// disable button when clicked
 			document.getElementById("regisbutton").disabled = true;
 			
-			// if response data has arrived and status is ok
-			if (xhttp.readyState == 4 && xhttp.status == 200) {
-				// insert response-text
-	    		document.getElementById("regisHeadline").innerHTML = xhttp.responseText;
-	    		// delete form-content and infotext
-	    		document.getElementById("register").innerHTML = ""; 
-	    		document.getElementById("statustext2").innerHTML = ""; 
-	    		document.getElementById("infotext2").innerHTML = ""; 
+			// if response data has arrived
+			if (xhttp.readyState == 4) {
+				// insert response-text and delete infotext
+	    		document.getElementById("statustext2").innerHTML = xhttp.responseText; 
+	    		document.getElementById("infotext2").innerHTML = "";
+
+
+	    		if (xhttp.status == 200) {
+	    			document.getElementById("infotext2").innerHTML = "Please check your emails and confirm your address."; 
+
+	    		}
 	  		}
 	  	}
 
@@ -49,7 +52,7 @@ function handleLogin(){
 
     console.log("handling Login")
 
-	// if id and description are empty no ajax-request is sent!
+	// if id or password are empty no ajax-request is sent!
 	if(id == "" || password == ""){
 		document.getElementById("statustext3").innerHTML = "<b>All fields need to be filled in!</b>"
 	}
@@ -63,14 +66,17 @@ function handleLogin(){
 		// define function which is called when ready state changes
 		xhttp.onreadystatechange = function() {
 			// disable button when clicked
-			document.getElementById("regisbutton").disabled = true;
+			//document.getElementById("loginbutton").disabled = true;
 			
 			// if response data has arrived and status is ok
 			if (xhttp.readyState == 4 && xhttp.status == 200) {
-				// insert response-text
+				// delete everything
 	    		document.getElementById("regisHeadline").innerHTML = xhttp.responseText;
-	    		// delete form-content and infotext
 	    		document.getElementById("register").innerHTML = ""; 
+	    		document.getElementById("infotext2").innerHTML = ""; 
+
+	    		document.getElementById("loginHeadline").innerHTML = "";
+	    		document.getElementById("login").innerHTML = ""; 
 	    		document.getElementById("statustext3").innerHTML = ""; 
 	  		}
 	  	}

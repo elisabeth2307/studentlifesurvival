@@ -29,8 +29,6 @@ RegistrationController.prototype.handle = function() {
 		console.log("INFO token = "+token)
 		regisManager.verifyUser(id, token)
 		
-		res.writeHead(200, {'content-type':'text/plain'})
-		res.end("Email-Adress successfully verified\n")
 	}
 
 	//register or login
@@ -46,11 +44,16 @@ RegistrationController.prototype.handle = function() {
 			paramData = paramData.replace(/%40/g, '@')
 
 			console.log("POST-DATA: ", paramData)
-			status = regisManager.insert(paramData)
+
+			//if email is set -> register
+			if (paramData.split('&')[1].substring(0,5) == 'email') {
+				regisManager.insert(paramData, res)
+			}
+			else {
+				regisManager.login(paramData, res)
+			}
 		});
 
-			res.writeHead(200, {'content-type':'text/plain'});
-			res.end(status);
 	}
 } 
 

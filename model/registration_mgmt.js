@@ -50,8 +50,8 @@ RegisManager.prototype.filling = function(){
   })
 }
 
-// INSERT USER -----------------------------------------------------------------------------------
-RegisManager.prototype.insert = function(paramData){
+// REGISTER USER -----------------------------------------------------------------------------------
+RegisManager.prototype.insert = function(paramData, res){
 	
   // create random token
   exports.createToken = function(callback) {
@@ -82,52 +82,98 @@ RegisManager.prototype.insert = function(paramData){
 
   //check if user exists
   db.hget ("users", data.id, function(err, data) {
+    
     if (err) 
       console.log(err)
-    if (data == null) {
 
+    else if (data == null) {
       console.log ("new user")
       data = tmpdata.data
 
+      // input validation
+      if (data.id == "" || data.email == "" || data.password == "" ||
+          data.id == null || data.email == null || data.password == null){
+
+        res.writeHead(400, {'content-type':'text/plain'})
+        res.end("Something is missing.")
+      }
       
-      //send e mail to given adress
-      console.log("\nsending mail\n")
-      mailer.sendMail(data.id, data.email, data.token)
 
-      //write user to database
-      db.hset("users", data.id, JSON.stringify(data), function(err, data){
-        if (err) {
-          console.log(err)
-        } 
-      })
+      else {
+        //send e mail to given adress
+        console.log("\nsending mail\n")
+        mailer.sendMail(data.id, data.email, data.token)
 
-      return ("user successfully inserted")
+        //write user to database
+        db.hset("users", data.id, JSON.stringify(data), function(err, data){
+          if (err) {
+            console.log(err)
+            res.writeHead(500, {'content-type':'text/plain'})
+            res.end("Sorry, something went wrong.");
+          } 
+        })
+        res.writeHead(200, {'content-type':'text/plain'})
+        res.end("Successfully registered.")
+      }
     } 
 
     else {
       console.log("user already exists") 
-      return("user already exists")
-      //->login->cookie
-      //TODO
+      res.writeHead(400, {'content-type':'text/plain'})
+      res.end("This user already exists.<b>If you're already registered please use the login-form.<b>Else choose a different username.")
     }
   })
   
 }
 
 
-// READ USER -----------------------------------------------------------------------------------
-RegisManager.prototype.get = function(userid){
-  
-   // find user by id
-  db.hget(("users", userid), function(err, data){
+// LOGIN -----------------------------------------------------------------------------------
+RegisManager.prototype.login = function(paramData, res){
+
+  console.log("LOGIN")
+
+  var data = {}
+  var keyvals, k, v
+
+  // get needed data as key-value pairs (stolen from mr feiner)
+  paramData && paramData.split("&").forEach(function(keyval) {
+    keyvals = keyval.split("=")
+    k = keyvals[0]
+    v = keyvals[1]
+    data[k] = v // this.data isn't possible at this point
+  })
+  this.data = data
+  var tmpdata = this
+
+  //check if user exists
+  db.hget ("users", data.id, function(err, data) {
+    var tempdata = this
+
     if (err) {
       console.log(err)
-    } else {
-      console.log(data)
-      return data
+      res.writeHead(500, {'content-type':'text/plain'})
+      res.end("Sorry, something went wrong.");
+    }
+
+    else if (data == null) {
+      res.writeHead(400, {'content-type':'text/plain'})
+      res.end("Sorry, this username does not exist.<b>Use the register-form or try again.")
+    } 
+
+    else {
+      var userdata = tmpdata.data
+      var dbdata;
+
+      console.log("userpw: " + userdata.password)
+
+      //check if password is correct
+      //create cookie
+      //set cookie
+      //?
+      res.writeHead(200, {'content-type':'text/plain'})
+      res.end("Welcome back, " + userdata.id + "!")
     }
   })
-
 }
 
 
