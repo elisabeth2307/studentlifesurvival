@@ -7,8 +7,6 @@ var RegistrationController = function(parsedurlinfo, req, res){
 	this.req = req
 	this.res = res
 	this.regisManager = new RegistrationManager(parsedurlinfo, res)
-	this.htmlData = ""
-	this.headerData = ""
 }
 
 RegistrationController.prototype.handle = function() {
@@ -18,8 +16,6 @@ RegistrationController.prototype.handle = function() {
 	var res = this.res
 	var req = this.req
 	var paramData = this.parsedurlinfo.params
-	var htmlData = this.htmlData
-	var headerData = this.headerData
 
 	console.log("INFO: registration controller")
 
@@ -40,6 +36,7 @@ RegistrationController.prototype.handle = function() {
 	//register or login
 	else {
 
+		var status = ''
 		// get post-data
 		var paramData = ''
 		req.on("data", function(data){paramData +=data})
@@ -49,11 +46,11 @@ RegistrationController.prototype.handle = function() {
 			paramData = paramData.replace(/%40/g, '@')
 
 			console.log("POST-DATA: ", paramData)
-			regisManager.insert(paramData)
+			status = regisManager.insert(paramData)
 		});
 
 			res.writeHead(200, {'content-type':'text/plain'});
-			res.end("User inserted (?)\n");
+			res.end(status);
 	}
 } 
 

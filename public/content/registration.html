@@ -1,5 +1,8 @@
-<h2>Register or log in<h2>
-<form method=POST action = "registration.html" id = "register">
+<h2 id = "regisHeadline">Register<h2>
+<p class="infotextleft" id="infotext2">Please enter a unique username, your email-adress and a (safe) password.</p>
+<p id="statustext2" class="infotextleft"></p><br>
+
+<form id = "register">
 	Name:<br>
 	<input type="text" name="id">
 	<br>
@@ -9,6 +12,20 @@
 	Password:<br>
 	<input type="password" name="password">
 	<br><br>
-	<input type="submit" value="Submit"> <!-- onclick=yourfunction() type="button"-->
+	<input type="button" value="Register" onclick=handleRegis() id="regisbutton">
 </form>
 
+
+
+<h2 id = "loginHeadline">Login<h2>
+<p id="statustext3" class="infotextleft"></p><br>
+
+<form id = "login">
+	Name:<br>
+	<input type="text" name="id">
+	<br>
+	Password:<br>
+	<input type="password" name="password">
+	<br><br>
+	<input type="button" value="Login" onclick=handleLogin() id="loginbutton">
+</form>

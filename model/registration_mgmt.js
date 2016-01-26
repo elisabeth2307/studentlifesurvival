@@ -100,10 +100,15 @@ RegisManager.prototype.insert = function(paramData){
           console.log(err)
         } 
       })
+
+      return ("user successfully inserted")
     } 
 
     else {
-      console.log("user already exists") //->login->cookie
+      console.log("user already exists") 
+      return("user already exists")
+      //->login->cookie
+      //TODO
     }
   })
   
