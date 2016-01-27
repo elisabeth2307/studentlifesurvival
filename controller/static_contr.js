@@ -20,6 +20,7 @@ StaticController.prototype.handle=function () {
 	var id = this.parsedurlinfo.id
 	var content = this.parsedurlinfo.content
 	var filename = this.parsedurlinfo.path
+	var cookieSet = this.parsedurlinfo.cookieSet
 	
 	console.log("INFO: serving static file '"+ filename)
 
@@ -62,6 +63,13 @@ StaticController.prototype.handle=function () {
 						} else {
 							// html template data to string
 							var result = tempdata.toString()
+
+							// set "status-text" depending if logged in or not
+							var status = "Register/Login"
+							if(cookieSet){
+								status = "Logged in"
+							}
+							result = result.replace(/{STATUS}/g, status)
 
 							// if id is cooking (site with dynamic content) also call crud-controller
 							if(id == "cooking"){
