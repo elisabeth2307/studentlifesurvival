@@ -11,7 +11,6 @@ var Mailer = function(){
 }
 
 Mailer.prototype.sendMail = function(name, email, token){
-	email = 'tabea.halmschlager@edu.fh-joanneum.at'
 	console.log("SENDING MAIL to " + email)
 	this.transporter.sendMail({
 		from: 'studentlifesurvival@fh-joanneum.at',
