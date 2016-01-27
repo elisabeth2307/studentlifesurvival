@@ -3,6 +3,7 @@
   "version": "1.0.9",
   "dependencies": {
     "nodemailer": ">0.1",
+    "password-hash": "^1.2.2",
     "redis": "~2.4.2",
     "superagent": "~1.6.1"
   },

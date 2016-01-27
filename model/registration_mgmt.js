@@ -5,6 +5,7 @@ var crypto = require("crypto")
 var Cookie = require ("../helper/cookies.js")
 var config = require('../config.js')
 var Mailer = require('../helper/mailer.js')
+var passwordHash = require("password-hash")
 var db = redis.createClient(config.redisPort, config.server)
 var filename = "./data/users.db"
 
@@ -90,6 +91,8 @@ RegisManager.prototype.insert = function(paramData, res){
       console.log ("new user")
       data = tmpdata.data
 
+      data.password = passwordHash.generate(data.password)
+
       // input validation
       if (data.id == "" || data.email == "" || data.password == "" ||
           data.id == null || data.email == null || data.password == null){
@@ -164,7 +167,7 @@ RegisManager.prototype.login = function(paramData, res, req){
       var dbdata = JSON.parse(dbdata);
 
       // check if password is correct
-      if (dbdata.password == userdata.password) {
+      if (passwordHash.verify(userdata.password, dbdata.password)) {
         console.log("password correct")
         
         //email address must be validated to log in
@@ -205,7 +208,7 @@ RegisManager.prototype.login = function(paramData, res, req){
 
 
 // VERIFY USER -----------------------------------------------------------------------------------
-RegisManager.prototype.verifyUser = function(id, token){
+RegisManager.prototype.verifyUser = function(id, token, res){
 
   db.hget("users", id, function(err, data){
     if (err) {
@@ -216,6 +219,7 @@ RegisManager.prototype.verifyUser = function(id, token){
 
       var user = {}
       user.id = data.id
+      user.password = data.password
       user.email = data.email
       user.password = data.password
       user.valid = 'true'
@@ -225,7 +229,10 @@ RegisManager.prototype.verifyUser = function(id, token){
         db.hset("users", user.id, JSON.stringify(user), function(err, data){
           if (err)
             console.log(err)
+          res.writeHead(200, {'content-type':'text/plain'})
+          res.end("Email address successfully verified.")
         })
+        
       }
       
     }
