@@ -217,6 +217,7 @@ RegisManager.prototype.verifyUser = function(id, token){
       var user = {}
       user.id = data.id
       user.email = data.email
+      user.password = data.password
       user.valid = 'true'
 
       if (token == data.token) {
