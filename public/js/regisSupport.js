@@ -29,14 +29,11 @@ function handleRegis(){
 	    		document.getElementById("statustext2").innerHTML = xhttp.responseText; 
 	    		document.getElementById("infotext2").innerHTML = "";
 
-
 	    		if (xhttp.status == 200) {
 	    			document.getElementById("infotext2").innerHTML = "Please check your emails and confirm your address."; 
-
 	    		}
 	  		}
 	  	}
-
 	  	// send request
 		xhttp.send(data);
 	}
@@ -49,8 +46,6 @@ function handleLogin(){
 	var id = document.getElementById("idLogin").value
 	var password = document.getElementById("passwordLogin").value
 	var data = "id="+id+"&password="+password+""
-
-    console.log("handling Login")
 
 	// if id or password are empty no ajax-request is sent!
 	if(id == "" || password == ""){
@@ -66,18 +61,24 @@ function handleLogin(){
 		// define function which is called when ready state changes
 		xhttp.onreadystatechange = function() {
 			// disable button when clicked
-			//document.getElementById("loginbutton").disabled = true;
+			document.getElementById("loginbutton").disabled = true;
 			
 			// if response data has arrived and status is ok
-			if (xhttp.readyState == 4 && xhttp.status == 200) {
-				// delete everything
-	    		document.getElementById("regisHeadline").innerHTML = xhttp.responseText;
-	    		document.getElementById("register").innerHTML = ""; 
-	    		document.getElementById("infotext2").innerHTML = ""; 
-
-	    		document.getElementById("loginHeadline").innerHTML = "";
-	    		document.getElementById("login").innerHTML = ""; 
-	    		document.getElementById("statustext3").innerHTML = ""; 
+			if (xhttp.readyState == 4 ) {
+				if (xhttp.status == 200){
+					// delete everything
+		    		document.getElementById("regisHeadline").innerHTML = xhttp.responseText;
+		    		document.getElementById("register").innerHTML = ""; 
+		    		document.getElementById("infotext2").innerHTML = "";
+		    		document.getElementById("statustext2").innerHTML = ""; 
+ 
+		    		document.getElementById("loginHeadline").innerHTML = "";
+		    		document.getElementById("login").innerHTML = ""; 
+		    		document.getElementById("statustext3").innerHTML = ""; 
+		    	} else {
+		    		document.getElementById("statustext3").innerHTML = xhttp.responseText; 
+		    		document.getElementById("loginbutton").disabled = false;
+		    	}
 	  		}
 	  	}
 

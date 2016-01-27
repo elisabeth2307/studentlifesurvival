@@ -120,7 +120,7 @@ RegisManager.prototype.insert = function(paramData, res){
     else {
       console.log("user already exists") 
       res.writeHead(400, {'content-type':'text/plain'})
-      res.end("This user already exists.<b>If you're already registered please use the login-form.<b>Else choose a different username.")
+      res.end("This user already exists.<br>If you're already registered please use the login-form.<br>Else choose a different username.")
     }
   })
   
@@ -147,7 +147,6 @@ RegisManager.prototype.login = function(paramData, res, req){
 
   //check if user exists
   db.hget ("users", data.id, function(err, dbdata) {
-    var tempdata = this
 
     if (err) {
       console.log(err)
@@ -157,7 +156,7 @@ RegisManager.prototype.login = function(paramData, res, req){
 
     else if (dbdata == null) {
       res.writeHead(400, {'content-type':'text/plain'})
-      res.end("Sorry, this username does not exist.<b>Use the register-form or try again.")
+      res.end("Sorry, this username does not exist.<br>Use the register-form or try again.")
     } 
 
     else {
@@ -166,32 +165,39 @@ RegisManager.prototype.login = function(paramData, res, req){
 
       // check if password is correct
       if (dbdata.password == userdata.password) {
-        console.log("password not correct")
+        console.log("password correct")
+        
+        //email address must be validated to log in
+        if (dbdata.valid == false) {
+          console.log("email not confirmed")
+          res.writeHead(400, {'content-type':'text/plain'})
+          res.end("Sorry, your email-address is not confirmed.<br>Please check your emails and try again.<br>If you didn't receive an email from us please register again.")
+        }
+        else {
+          //set session-cookie
+          var rc = req.headers.cookie
+          var cookiesDict = {}
+          rc && rc.split(';').forEach(function (cookie){
+            var parts = cookie.split('=')
+            if(parts[0])
+              cookiesDict[parts[0] = rc]
+          })
 
-        //set session-cookie
-        var rc = req.headers.cookie
-        var cookiesDict = {}
-        rc && rc.split(';').forEach(function (cookie){
-          var parts = cookie.split('=')
-          if(parts[0])
-            cookiesDict[parts[0] = rc]
-        })
+          var respCookies = []
+          var id = Math.floor((Math.random()*9000)+1)
+          if(Object.keys(cookiesDict).length == 0)
+            respCookies.push(new Cookie('studentlife_id', id))
 
-        var respCookies = []
-        var id = Math.floor((Math.random()*9000)+1)
-        if(Object.keys(cookiesDict).length == 0)
-          respCookies.push(new Cookie('studentlife_id', id))
-
-        res.setHeader("Set-Cookie", respCookies)
-        res.writeHead(200, {'content-type':'text/plain'})
-        res.end("Welcome back, " + userdata.id + "!")
+          res.setHeader("Set-Cookie", respCookies)
+          res.writeHead(200, {'content-type':'text/plain'})
+          res.end("Welcome back, " + userdata.id + "!")
+        }
       } 
       // password not correct
       else {
         console.log("password not correct")
-
-        res.writeHead(200, {'content-type':'text/plain'})
-        res.end("Sorry, wrong password. <b>Use the register-form or try again.")
+        res.writeHead(400, {'content-type':'text/plain'})
+        res.end("Sorry, wrong password. Use the register-form or try again.")
       }
     }
   })
