@@ -1,6 +1,9 @@
 // execution: "nodeunit unitTestingCRUD.js"
-// some parts are not executed because we got problems with the cookies
-// but it is proved that the basic functionality works
+
+// set "global" user - just once (because of login)
+var requestSuperagent = require('superagent');
+var testuser = requestSuperagent.agent()
+
 module.exports = {
 	setUp: function(callback) {
 		console.log("-------------------------------------")
@@ -9,18 +12,30 @@ module.exports = {
 		var config = require("../config.js")
 
 		// global variables
-		this.request = require('superagent')
 		this.recipeName = "TurkeyUnitTest"
 		this.servPort = config.server+":"+config.serverPort
 		this.url = this.servPort+"/cooking.html"
 
 		callback();
 	},
+	testLogin: function(test){
+		// login data (just for testing)
+		var data = "id=eli&password=geheim"
+
+		// send post-request
+		testuser.post(this.servPort+"/public/content/registration.html").send(data).end(function(err,response){
+			if (err) {
+				console.log(err)
+			} else {
+				test.equals(response.status, "200")
+				test.done()
+			}
+		});
+	},
 	testGet: function(test) {
-		var recipeName = this.recipeName
 
 		// send a get request to cooking.html for checking if the test-recipe doesn't exists
-		this.request.get(this.url).send().end(function(err,response){
+		testuser.get(this.url).send().end(function(err,response){
 			if(err){
 				console.log(err)
 			} else {
@@ -29,7 +44,7 @@ module.exports = {
 
 				// console output
 				console.log("Response-status: "+response.status)
-				console.log("Index of "+recipeName+": "+htmlContent.indexOf(recipeName))
+				console.log("Index of "+this.recipeName+": "+htmlContent.indexOf(this.recipeName))
 
 				// controll if html content contains name of test-recipe -> shall be -1 (not there)
 				test.equals(htmlContent.indexOf(this.recipeName), -1)
@@ -41,13 +56,9 @@ module.exports = {
 	testInsert: function(test) {
 		// string for post data
 		var data = "id="+this.recipeName+"&title="+this.recipeName+"&description="+this.recipeName+"&imgsrc=chicken.jpg"
-		// needed because of Verschachtelung -> Javascript scope ist gemein zu mir
-		var request = this.request
-		var url = this.url
-		var recipeName = this.recipeName
 
 		// send a post request for inserting a new recipe
-		request.post(this.servPort+"/public/content/recipes/"+recipeName+".txt").send(data).end(function(err,response){
+		testuser.post(this.servPort+"/public/content/recipes/"+this.recipeName+".txt").send(data).end(function(err,response){
 			if(err){
 				console.log(err)
 			} else {
@@ -58,34 +69,15 @@ module.exports = {
 				// controll text
 				test.equals(response.text, "Task was successful!")
 				test.done()
-
-				// call cooking.html for making sure it is really on the website
-				/*request.get(url).send().end(function(err, response){
-					if (err) {
-						console.log(err)
-					} else {
-						var htmlContent = response.text.toString('UTF-8')
-
-						// console output
-						console.log("Index of "+recipeName+": "+htmlContent.indexOf(recipeName))
-
-						// the recipe should be on the website, the index is something else than -1 (-1 = not found)
-						test.notEqual(htmlContent.indexOf(recipeName), -1)
-						test.done()
-					}
-				})*/
 			}
 		})
 	},
 	testUpdate: function(test) {
 		var dataUpdate = "id="+this.recipeName+"&title="+this.recipeName+"&description=Modified"+this.recipeName+"&imgsrc=chicken.jpg"
 		var searchString = "Modified"+this.recipeName
-		var request = this.request
-		var url = this.url
-		var recipeName = this.recipeName
 
 		// send update request
-		request.put(this.servPort+"/public/content/recipes/"+recipeName+".txt").send(dataUpdate).end(function(error, resp){
+		testuser.put(this.servPort+"/public/content/recipes/"+this.recipeName+".txt").send(dataUpdate).end(function(error, resp){
 			if (error){
 				console.log(error)
 			} else {
@@ -93,24 +85,6 @@ module.exports = {
 				console.log(resp.text)
 				test.equals("Task was successful!", resp.text)
 				test.done()
-
-				// retrieve data again to be sure is has been updated
-				/*request.get(url).send().end(function(errorGet, responseGet){
-					if (errorGet) {
-						console.log(errorGet)
-					} else {
-						// get html data of cooking.html
-						var htmlContent = responseGet.text.toString('UTF-8')
-
-						// console output
-						console.log("Response-status: "+responseGet.status)
-						console.log("Index of "+searchString+": "+htmlContent.indexOf(searchString))
-
-						// the searchpattern shall be found (something else than -1)
-						test.notEqual(htmlContent.indexOf(searchString), -1)
-						test.done()
-					}
-				})*/
 			}
 		})
 	},
@@ -118,7 +92,7 @@ module.exports = {
 		var recipeName = this.recipeName
 
 		// send delete request
-		this.request.delete(this.servPort+"/public/content/recipes/"+recipeName+".txt").send().end(function(err, response){
+		testuser.delete(this.servPort+"/public/content/recipes/"+recipeName+".txt").send().end(function(err, response){
 			if (err) {
 				console.log(err)
 			} else {

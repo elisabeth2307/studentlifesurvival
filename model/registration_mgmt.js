@@ -130,7 +130,7 @@ RegisManager.prototype.insert = function(paramData, res){
 // LOGIN -----------------------------------------------------------------------------------
 RegisManager.prototype.login = function(paramData, res, req){
 
-  console.log("-- LOGIN")
+  console.log("\n--- LOGIN")
 
   var data = {}
   var keyvals, k, v

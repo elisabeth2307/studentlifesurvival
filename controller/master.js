@@ -8,9 +8,10 @@ startup = function(){
 
 	var serv = http.createServer(function(req, res) {
 		var cookieSet = false
+		var handlerController = null
 
 		// check if cookie is set -> needed for urlparser
-		if(req.headers.cookie != null && req.headers.cookie.split('=')[0] == "studentlife_id"){
+		if(req.headers.cookie != null){
 			cookieSet = true
 		}
 
@@ -36,21 +37,30 @@ startup = function(){
 		else if(req.method == "GET" && urlparser.controller == "static") {
 			handlerController = new staticcontr.StaticController(urlparser, req, res)		
 		} 
-		else if (req.method == "DELETE" && urlparser.resource == "public/content/recipes") {
+		else if (req.method == "DELETE" && urlparser.resource == "public/content/recipes" && urlparser.permission) {
 			handlerController = new crudContr.CrudController(urlparser, req, res)
 		} 
-		else if (req.method == "POST" && urlparser.resource == "public/content/recipes"){
+		else if (req.method == "POST" && urlparser.resource == "public/content/recipes" && urlparser.permission){
 			handlerController = new crudContr.CrudController(urlparser, req, res)
 		} 
-		else if (req.method == "PUT" && urlparser.resource == "public/content/recipes"){
+		else if (req.method == "PUT" && urlparser.resource == "public/content/recipes" && urlparser.permission){
 			handlerController = new crudContr.CrudController(urlparser, req, res)
 		} 
+		else if (!urlparser.permission) {
+			// only bad people get here! (e. g. via CURL without being logged in)
+			res.writeHead(400, {'content-type':'text/plain'});
+			res.end("Please log in to perform changes.");
+		}
 		// DEFAULT -----------------------------------------------------------------------
 		else {
 			handlerController = new staticcontr.StaticController(urlparser, req, res)		
 		}
 
-		handlerController.handle();	// controller starts doing something
+		// if handlerController is defined (just null when someone tried to insert/delete/update data with CURL without being logged in)
+		if(handlerController != null){
+			handlerController.handle();	// controller starts doing something
+		}
+		
 	});
 	serv.listen(config.serverPort); // define to which port server should listen
 }

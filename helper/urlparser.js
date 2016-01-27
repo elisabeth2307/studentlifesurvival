@@ -12,6 +12,8 @@ var UrlParser = function(request, cookieSet){
 	this.format="";
 	this.params={}
 	this.cookieSet=cookieSet
+	this.method=request.method
+	this.permission=true
 	
 	this.parse();
 }
@@ -89,6 +91,16 @@ UrlParser.prototype.parse=function(){
 		this.resource = "public"
 	}
 
+	// handle to prohibit CRUD operations via CURL or something like that if no cookie is set (special handle in master)
+	if (this.cookieSet == false && (this.method == "POST" || this.method == "PUT" || this.method == "DELETE")){
+		this.permission = false
+	}
+
+	// no permission without cookie
+	if (!this.cookieSet){
+		this.permission = false
+	}
+
 	// console output
 	this.path = this.resource + "/" + this.id + "." + this.format // build path string
 	console.log("\nINFO parsing completed '"+this.url+"'")
@@ -99,6 +111,8 @@ UrlParser.prototype.parse=function(){
 	console.log("INFO params    = '"+this.params+"'")
 	console.log("INFO content   = '"+this.content+"'")
 	console.log("INFO cookie    = '"+this.cookieSet+"'")
+	console.log("INFO permission= '"+this.permission+"'")
+
 }
 
 module.exports.UrlParser=UrlParser
