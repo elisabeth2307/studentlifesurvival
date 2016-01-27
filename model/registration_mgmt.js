@@ -205,7 +205,7 @@ RegisManager.prototype.login = function(paramData, res, req){
 
 
 // VERIFY USER -----------------------------------------------------------------------------------
-RegisManager.prototype.verifyUser = function(id, token){
+RegisManager.prototype.verifyUser = function(id, token, res){
 
   db.hget("users", id, function(err, data){
     if (err) {
@@ -216,6 +216,7 @@ RegisManager.prototype.verifyUser = function(id, token){
 
       var user = {}
       user.id = data.id
+      user.password = data.password
       user.email = data.email
       user.valid = 'true'
 
@@ -224,7 +225,10 @@ RegisManager.prototype.verifyUser = function(id, token){
         db.hset("users", user.id, JSON.stringify(user), function(err, data){
           if (err)
             console.log(err)
+          res.writeHead(200, {'content-type':'text/plain'})
+          res.end("Email address successfully verified.")
         })
+        
       }
       
     }

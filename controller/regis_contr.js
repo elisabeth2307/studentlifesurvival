@@ -27,7 +27,7 @@ RegistrationController.prototype.handle = function() {
 		var token = params.split('=')[2]
 
 		console.log("INFO token = "+token)
-		regisManager.verifyUser(id, token)
+		regisManager.verifyUser(id, token, res)
 		
 	}
 
